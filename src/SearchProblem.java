@@ -5,7 +5,12 @@ public abstract class SearchProblem {
     Node initialStateNode;
     int cost;
 
-    public abstract int costFunction(Node startNode,Node endNode);
+    public SearchProblem(String[] actions, Node initialStateNode) {
+        this.actions = actions;
+        this.initialStateNode = initialStateNode;
+    }
+
+    public abstract int costFunction(Node startNode, Node endNode);
     public abstract boolean isGoalState(Node node);
 
     //returns the children of the node after applying actions on it (if the action is applicable) with the actions preformed

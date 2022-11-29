@@ -18,7 +18,7 @@ public  class SearchProcedure {
         this.searchProblem = searchProblem;
     }
 
-    public String search(String searchStrategy, SearchProblem searchProblem){
+    public static String search(String searchStrategy, SearchProblem searchProblem){
         String res ="";
        switch (searchStrategy) {
            case ("BFS") :
@@ -32,7 +32,7 @@ public  class SearchProcedure {
         return "";
     }
 
-    private String BFsearch(SearchProblem searchProblem) {
+    private static String BFsearch(SearchProblem searchProblem) {
         String resString="";
         String plan="";
         String deaths="";
