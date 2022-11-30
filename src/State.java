@@ -1,7 +1,7 @@
 
 // A class represinting the state of a coast guard problem
 public class State implements Cloneable{
-    StateObject[] grid ;
+    StateObject[][] grid ;
     int numOfDeath;
     int numRetrived;
     int coastGuardXCoordinate;
@@ -11,7 +11,7 @@ public class State implements Cloneable{
 
 
 
-    public State(StateObject[] grid, int coastGuardXCoordinate, int coastGuardYCoordinate, int numOfUndamagedBlackBoxes) {
+    public State(StateObject[][] grid, int coastGuardXCoordinate, int coastGuardYCoordinate, int numOfUndamagedBlackBoxes) {
         this.grid = grid;
         this.coastGuardXCoordinate = coastGuardXCoordinate;
         this.coastGuardYCoordinate = coastGuardYCoordinate;
@@ -21,7 +21,7 @@ public class State implements Cloneable{
         blackBoxesRetrived=0;
     }
 
-    public State(StateObject[] grid, int numOfDeath, int numRetrived, int coastGuardXCoordinate, int coastGuardYCoordinate, int blackBoxesRetrived, int numOfUndamagedBlackBoxes) {
+    public State(StateObject[][] grid, int numOfDeath, int numRetrived, int coastGuardXCoordinate, int coastGuardYCoordinate, int blackBoxesRetrived, int numOfUndamagedBlackBoxes) {
         this.grid = grid;
         this.numOfDeath = numOfDeath;
         this.numRetrived = numRetrived;
@@ -35,10 +35,12 @@ public class State implements Cloneable{
     //a method that returns a deep clone of the state
     public State clone()
     {
-        StateObject[] retGrid = new StateObject[grid.length];
+        StateObject[][] retGrid = new StateObject[grid.length][grid[0].length];
 
         for (int i = 0; i < grid.length; i++) {
-            retGrid[i]=grid[i].clone();
+            for (int j = 0; j < grid[i].length; j++) {
+                retGrid[i][j] = grid[i][j].clone();
+            }
         }
         State retState = new State(retGrid,numOfDeath,numRetrived,coastGuardXCoordinate,coastGuardYCoordinate,blackBoxesRetrived,numOfUndamagedBlackBoxes);
 
