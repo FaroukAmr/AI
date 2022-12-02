@@ -15,6 +15,7 @@ public class Ship  extends StateObject{
         wrecked=false;
     }
 
+
     @Override
     public StateObject clone() {
         return null;

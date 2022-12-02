@@ -58,9 +58,8 @@ public class CoastGuard extends SearchProblem{
 
     public static String Solve(String grid, String strategy, boolean visualize) {
         StateObject[][] intialGridArray = genGridFromStringGrid(grid);
-        int[] coastGuardCoordinates = getCoastGuardCoardinatesFromStringGrid(grid);
-        int numOfUndamagedBlackBoxes = getNumOfUndamagedBlackBoxesFromGrid(intialGridArray);
-        State intialState = new State(intialGridArray,coastGuardCoordinates[0],coastGuardCoordinates[1],numOfUndamagedBlackBoxes);
+        CoastGuardBoat coastGuardBoat= getCoastGuardBoatFromStringGrid(grid);
+        State intialState = new State(intialGridArray,coastGuardBoat);
         Node intialNodeState = new Node(intialState,new Node[]{},null);
         CoastGuard coastGuardProblem = new CoastGuard(intialNodeState);
 
@@ -68,18 +67,22 @@ public class CoastGuard extends SearchProblem{
         return SearchProcedure.search(strategy,coastGuardProblem);
     }
 
-    private static int getNumOfUndamagedBlackBoxesFromGrid(StateObject[][] intialGridArray) {
-        int res=0;
-        for (int i = 0; i < intialGridArray.length; i++) {
-            for (int j = 0; j < intialGridArray[i].length; j++) {
-                if(intialGridArray[i][j] instanceof  Ship && (((Ship) intialGridArray[i][j]).damage<20)) {
-                    res++;
-                }
-            }
-        }
-        return res;
+    //creates coast guard boat object from the string represntation of the grid and returns it
+    private static CoastGuardBoat getCoastGuardBoatFromStringGrid(String grid){
+        int[] coastGuardCoordinates = getCoastGuardCoardinatesFromStringGrid(grid);
+        int coastGuardCapacity= getCoastGuardCapacityFromStingGrid(grid);
+        CoastGuardBoat coastGuardBoat= new CoastGuardBoat(coastGuardCapacity,coastGuardCoordinates[0],coastGuardCoordinates[1]);
+        return coastGuardBoat;
+
+    }
+    private static int getCoastGuardCapacityFromStingGrid(String grid)
+    {
+    return -1;
     }
 
+
+
+   //gets the coordinates of the coast guard boat from the string represntaion of the  grid
     private static int[] getCoastGuardCoardinatesFromStringGrid(String grid) {
         String[] gridInfo=grid.split(";");
         String[] cgPos = gridInfo[2].split(",");
@@ -143,19 +146,180 @@ public class CoastGuard extends SearchProblem{
 
     @Override
     public boolean isGoalState(Node node) {
-        StateObject[][] intialGridArray=node.state.grid;
-        for (int i = 0; i < intialGridArray.length; i++) {
-            for (int j = 0; j < intialGridArray[i].length; j++) {
-                if(intialGridArray[i][j] instanceof  Ship && ((((Ship) intialGridArray[i][j]).damage<20)) || (((Ship) intialGridArray[i][j]).numOfPassengers>0)){
-                    return false;
-                }
-            }
-        }
-        return true;
+        if(node.state.numOfUndamagedBlackBoxes==0 && node.state.getNumOfUnrescuedPassengers()==0)
+            return true;
+        else
+            return false;
     }
 
     @Override
     protected Node applyAction(String action, Node node) {
+        Node retNode = node.cloneNode();
+        retNode.parent=node;
+        State state =retNode.state;
+        CoastGuardBoat coastGuardBoat= state.coastGuardBoat;
+        int x = coastGuardBoat.x;
+        int y = coastGuardBoat.y;
+        StateObject objectAtCoastGuard = state.grid[x][y];
+
+        switch (action) {
+            case ("Pick"):
+               return applyPickAction(retNode,state,coastGuardBoat,objectAtCoastGuard);
+            case ("Drop"):
+                return applyDropAction(retNode,state,coastGuardBoat,objectAtCoastGuard);
+            case ("Retrieve"):
+                return applyRetrieveAction(retNode,state,coastGuardBoat,objectAtCoastGuard);
+
+            case ("Left"):
+                return applyLeftAction(retNode,state,coastGuardBoat,x,y);
+
+            case ("Right"):
+                return applyRightAction(retNode,state,coastGuardBoat,x,y);
+
+            case ("Up"):
+                return applyUpAction(retNode,state,coastGuardBoat,x,y);
+
+            case ("Down"):
+                return applyDownAction(retNode,state,coastGuardBoat,x,y);
+            default:
+                return null;
+        }
+
+    }
+
+    private Node applyDownAction(Node retNode, State state, CoastGuardBoat coastGuardBoat, int x,int y) {
+        if(y==state.grid[0].length)
+            return null;
+        else
+        {
+            coastGuardBoat.y+=1;
+            retNode.actionPerformedOn="Down";
+            applyTimeStep(retNode);
+            return retNode;
+        }
+    }
+
+    private Node applyUpAction(Node retNode, State state, CoastGuardBoat coastGuardBoat,  int x,int y) {
+        if(y==0)
+            return null;
+        else
+        {
+            coastGuardBoat.y-=1;
+            retNode.actionPerformedOn="Up";
+            applyTimeStep(retNode);
+            return retNode;
+        }
+    }
+
+    private Node applyRightAction(Node retNode, State state, CoastGuardBoat coastGuardBoat,  int x,int y) {
+        if(x==state.grid.length)
+            return null;
+        else
+        {
+            coastGuardBoat.x+=1;
+            retNode.actionPerformedOn="Right";
+            applyTimeStep(retNode);
+            return retNode;
+        }
+    }
+
+    private Node applyLeftAction(Node retNode, State state, CoastGuardBoat coastGuardBoat,  int x,int y) {
+        if(x==0)
+            return null;
+        else
+        {
+            coastGuardBoat.x-=1;
+            retNode.actionPerformedOn="Left";
+            applyTimeStep(retNode);
+            return retNode;
+        }
+    }
+
+
+    private Node applyDropAction(Node retNode, State state, CoastGuardBoat coastGuardBoat, StateObject objectAtCoastGuard) {
+
+
+        if(objectAtCoastGuard!=null){
+            if(objectAtCoastGuard instanceof Station)
+            {
+                Station station= (Station) objectAtCoastGuard;
+                int numRescued= coastGuardBoat.dropPassengers(station);
+                state.decreaseNumOfUnrescuedPassengers(numRescued);
+                applyTimeStep(retNode);
+                retNode.actionPerformedOn="Drop";
+                return retNode;
+
+            }
+        }
         return null;
     }
+
+    private Node applyRetrieveAction(Node retNode, State state, CoastGuardBoat coastGuardBoat, StateObject objectAtCoastGuard) {
+
+        if(objectAtCoastGuard!=null)
+        {
+            if(objectAtCoastGuard instanceof Ship)
+            {
+                Ship ship = (Ship) objectAtCoastGuard;
+                if(ship.wrecked) {
+                    if(!ship.blackBoxTaken && ship.damage<20)
+                    {
+                        ship.blackBoxTaken=true;
+                        state.blackBoxesRetrived++;
+                        state.numOfUndamagedBlackBoxes-=1;
+                        applyTimeStep(retNode);
+                        retNode.actionPerformedOn="Retrieve";
+                        return retNode;
+
+                    }
+                }
+            }
+            else
+                return null;
+
+        }
+
+        return null;
+    }
+
+
+    private Node applyPickAction(Node retNode,State state,CoastGuardBoat coastGuardBoat,StateObject objectAtCoastGuard) {
+
+        if(coastGuardBoat.isFull())
+            return null;
+
+        if(objectAtCoastGuard!=null)
+        {
+            if(objectAtCoastGuard instanceof Ship)
+            {
+                Ship ship = (Ship) objectAtCoastGuard;
+                if(ship.wrecked)
+                {
+                    return null;
+                }else if(ship.numOfPassengers>0){
+                    coastGuardBoat.pickPassengersFromShip(ship);
+                    applyTimeStep(retNode);
+                    retNode.actionPerformedOn="Pick";
+                    return retNode;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+                return null;
+
+        }
+
+            return null;
+
+    }
+
+
+
+    private void applyTimeStep(Node retNode) {
+    }
+
+
 }
