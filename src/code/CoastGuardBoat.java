@@ -1,3 +1,5 @@
+package code;
+
 public class CoastGuardBoat extends StateObject {
     int coastGuardCapacity;
     int x;
@@ -39,6 +41,7 @@ public class CoastGuardBoat extends StateObject {
         {
             passengersOnBoat+= ship.numOfPassengers;
             ship.numOfPassengers=0;
+            ship.wrecked=true;
         }
         else if(ship.numOfPassengers>remainingSpaceOnBoat)
         {

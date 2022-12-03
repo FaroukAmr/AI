@@ -1,3 +1,5 @@
+package code;
+
 public  class Node {
     State state;
     Node[] children;
@@ -23,9 +25,19 @@ public  class Node {
         this.actionPerformedOn = actionPerformedOn;
     }
 
+
+    //creates node with null constructor
+    public Node() {
+        this.parent=null;
+    }
+
     //A method that returns a deep clone of the node
     public Node cloneNode(){
-      Node retNode= new Node(parent);
+        Node retNode=null;
+      if(parent!=null)
+          retNode = new Node(parent);
+      else
+          retNode=new Node();
       retNode.children= new Node[children.length];
       cloneChildrenNodes(this,retNode);
       retNode.state=this.state.clone();
@@ -33,15 +45,25 @@ public  class Node {
       return retNode;
     }
 
+    public Node createChildNode(){
+
+        Node retNode = new Node(this);
+//        retNode.children= new Node[children.length];
+        //cloneChildrenNodes(this,retNode);
+        retNode.state=this.state.clone();
+
+        return retNode;
+    }
+
     //This is a method that creates a deepClone of the state of the node in the other node
-//    private void cloneNodeState(Node node, Node cloneNode) {
+//    private void cloneNodeState(code.Node node, code.Node cloneNode) {
 //        for (int i=0;i< node.state.length;i++) {
 //
 //            cloneNode.state[i]= node.state[i].clone();
 //        }
 //    }
 
-    //A method that puts the same children nodes in the original node in another Node
+    //A method that puts the same children nodes in the original node in another code.Node
     public static void cloneChildrenNodes(Node originalNode,Node cloneNode)
     {
         for (int i=0;i< originalNode.children.length;i++) {
@@ -51,13 +73,13 @@ public  class Node {
     }
 
     public String getAcitonPath() {
+        if(actionPerformedOn==null)
+            return "";
+//        if(parent==null)
+//            return "";
         String actionPath="";
         Node currParent=parent;
-        while(currParent!=null)
-        {
-            actionPath=currParent.actionPerformedOn+";"+actionPath;
-            currParent=parent;
-        }
+        actionPath=parent.getAcitonPath()+","+this.actionPerformedOn;
         return actionPath;
     }
 }

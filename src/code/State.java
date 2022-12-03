@@ -1,3 +1,4 @@
+package code;
 
 // A class represinting the state of a coast guard problem
 public class State implements Cloneable{
@@ -7,6 +8,7 @@ public class State implements Cloneable{
     CoastGuardBoat coastGuardBoat;
     int blackBoxesRetrived;
     int numOfUndamagedBlackBoxes;
+    int numOfDamagedBlackBoxes=0;
     int numOfDeadPassengers;
     int numOfUnrescuedPassengers;
 
@@ -18,6 +20,7 @@ public class State implements Cloneable{
         this.blackBoxesRetrived = blackBoxesRetrived;
         this.numOfDeadPassengers = numOfDeadPassengers;
         calculateNumOfUndamagedBlackBoxes();
+        calculateNumOfUnrescuedPassengers();
     }
 
 
@@ -29,6 +32,8 @@ public class State implements Cloneable{
         numRetrived=0;
         blackBoxesRetrived=0;
         calculateNumOfUndamagedBlackBoxes();
+        calculateNumOfUnrescuedPassengers();
+
     }
 
     public State(StateObject[][] grid, int numOfDeath, int numRetrived,CoastGuardBoat coastGuardBoat, int blackBoxesRetrived) {
@@ -38,6 +43,8 @@ public class State implements Cloneable{
         this.coastGuardBoat = coastGuardBoat;
         this.blackBoxesRetrived = blackBoxesRetrived;
         calculateNumOfUndamagedBlackBoxes();
+        calculateNumOfUnrescuedPassengers();
+
     }
 
 
@@ -48,7 +55,10 @@ public class State implements Cloneable{
 
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
-                retGrid[i][j] = grid[i][j].clone();
+                if(grid[i][j]==null)
+                    retGrid[i][j] = null;
+                else
+                    retGrid[i][j] = grid[i][j].clone();
             }
         }
         State retState = new State(retGrid,numOfDeath,numRetrived, (CoastGuardBoat) coastGuardBoat.clone(),blackBoxesRetrived,numOfDeadPassengers);
@@ -68,6 +78,7 @@ public class State implements Cloneable{
             }
         }
         this.numOfUnrescuedPassengers=numOfUnrescuedPassengers;
+        this.numOfUnrescuedPassengers+=coastGuardBoat.passengersOnBoat;
         return numOfUnrescuedPassengers;
     }
 
@@ -100,8 +111,31 @@ public class State implements Cloneable{
          numOfUndamagedBlackBoxes=0;
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
-                if(grid[i][j] instanceof  Ship && (((Ship) grid[i][j]).damage<20)) {
-                    numOfUndamagedBlackBoxes++;
+
+                StateObject stateObject= grid[i][j];
+                if(stateObject instanceof  Ship)
+                {
+                    Ship ship = (Ship) stateObject;
+                    if(ship.damage<20 && !ship.blackBoxTaken)
+                        numOfUndamagedBlackBoxes++;
+                }
+            }
+        }
+
+    }
+
+
+    void calculateNumOfdamagedBlackBoxes() {
+        numOfDamagedBlackBoxes = 0;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+
+                StateObject stateObject= grid[i][j];
+                if(stateObject instanceof  Ship)
+                {
+                    Ship ship = (Ship) stateObject;
+                    if(ship.damage>20 && !ship.blackBoxTaken)
+                        numOfDamagedBlackBoxes++;
                 }
             }
         }

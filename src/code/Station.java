@@ -1,3 +1,5 @@
+package code;
+
 public class Station extends StateObject {
     int x;
     int y;

@@ -1,14 +1,21 @@
+package code;
+
 public class CoastGuard extends SearchProblem{
-    static StateObject[][] grid;
+    // StateObject[][] grid;
     static int numOfDeaths=0;
     static int numOfRetrived=0;
-    static String[] actions = {"Pick","Drop","Retrieve","Up","Down","Left","Right"};
+    static String[] actions = {"Pick-up","Drop","Retrieve","Up","Down","Left","Right"};
 
     public  CoastGuard(Node intialNodeState) {
         super(actions,intialNodeState);
 
+        int x =0;
+        x++;
+
 
     }
+
+
     public static String GenGrid() {
         int xDimension = (int) (Math.random() * 50);
         int yDimension = (int) (Math.random() * 50);
@@ -16,7 +23,7 @@ public class CoastGuard extends SearchProblem{
         int numOfStations = ((int)( Math.random() * xDimension * yDimension / 2)) + 1;
         int shipCapacity = ((int) (Math.random() * 99)) + 1;
         int coastGuardCapacity = ((int) (Math.random() * 99)) + 1;
-        grid = new StateObject[xDimension][yDimension];
+        StateObject[][] grid = new StateObject[xDimension][yDimension];
 
         int[] coastGuarddIntialCoordinate = generateRandomCoordinate(xDimension, yDimension);
         grid[coastGuarddIntialCoordinate[0]][coastGuarddIntialCoordinate[1]] = new CoastGuardBoat(coastGuardCapacity, xDimension, yDimension);
@@ -48,6 +55,7 @@ public class CoastGuard extends SearchProblem{
         return retString;
     }
 
+
     private static int[] generateRandomCoordinate(int xDimension, int yDimension) {
         int x = (int) (Math.random() * xDimension);
         int y = (int) (Math.random() * yDimension);
@@ -56,7 +64,7 @@ public class CoastGuard extends SearchProblem{
         return new int[]{x, y};
     }
 
-    public static String Solve(String grid, String strategy, boolean visualize) {
+    public static String solve(String grid, String strategy, boolean visualize) {
         StateObject[][] intialGridArray = genGridFromStringGrid(grid);
         CoastGuardBoat coastGuardBoat= getCoastGuardBoatFromStringGrid(grid);
         State intialState = new State(intialGridArray,coastGuardBoat);
@@ -77,7 +85,9 @@ public class CoastGuard extends SearchProblem{
     }
     private static int getCoastGuardCapacityFromStingGrid(String grid)
     {
-    return -1;
+        String[] gridInfo=grid.split(";");
+        String[] cgPos = gridInfo[1].split(",");
+        return Integer.parseInt(cgPos[0]);
     }
 
 
@@ -95,9 +105,10 @@ public class CoastGuard extends SearchProblem{
         String[] gridInfo=grid.split(";");
 
         //M,N index: 0
+        //3,4;97;1,2;0,1;3,2,65
         String[] coordinates = gridInfo[0].split(",");
-        int m = Integer.parseInt(coordinates[0]);
-        int n = Integer.parseInt(coordinates[1]);
+        int n = Integer.parseInt(coordinates[0]);
+        int m = Integer.parseInt(coordinates[1]);
 
         /*//C index : 1
         int c = Integer.parseInt(gridInfo[1]);
@@ -129,32 +140,41 @@ public class CoastGuard extends SearchProblem{
             int y= Integer.parseInt(ships[i+1]);
             int num= Integer.parseInt(ships[i+2]);
             Ship ship = new Ship(num,x,y);
-            resGrid[x][x]=ship;
+            resGrid[x][y]=ship;
         }
         return resGrid;
     }
 
     public static void main(String[] args)
     {
-        System.out.println(GenGrid());
+        solve("3,4;97;1,2;0,1;3,2,65;","BF",false);
     }
 
     @Override
-    public int costFunction(Node startNode, Node endNode) {
-        return 0;
+    public int costFunction(Node endNode) {
+
+        State state = endNode.state;
+
+        return (state.numOfDamagedBlackBoxes + state.numOfDeadPassengers*1000);
     }
 
+
+
     @Override
+    //checks for the goal state if there is no more blackboxes or passengers to be rescued(if they are on the boat they are not rescued yet).
     public boolean isGoalState(Node node) {
-        if(node.state.numOfUndamagedBlackBoxes==0 && node.state.getNumOfUnrescuedPassengers()==0)
+        if(node.state.numOfUndamagedBlackBoxes==0 && node.state.getNumOfUnrescuedPassengers()==0 && node.state.coastGuardBoat.passengersOnBoat==0)
             return true;
         else
             return false;
     }
 
     @Override
+    //Takes the action as a string and the node and applies the action on the node and returns the child node after the action is applied
+    //returns null if there is a problem with the action or the action is not applicable
     protected Node applyAction(String action, Node node) {
-        Node retNode = node.cloneNode();
+        //The chile node  which will be returned
+        Node retNode = node.createChildNode();
         retNode.parent=node;
         State state =retNode.state;
         CoastGuardBoat coastGuardBoat= state.coastGuardBoat;
@@ -163,7 +183,7 @@ public class CoastGuard extends SearchProblem{
         StateObject objectAtCoastGuard = state.grid[x][y];
 
         switch (action) {
-            case ("Pick"):
+            case ("Pick-up"):
                return applyPickAction(retNode,state,coastGuardBoat,objectAtCoastGuard);
             case ("Drop"):
                 return applyDropAction(retNode,state,coastGuardBoat,objectAtCoastGuard);
@@ -187,57 +207,63 @@ public class CoastGuard extends SearchProblem{
 
     }
 
+    //returns null if the board is at the end of the grid
     private Node applyDownAction(Node retNode, State state, CoastGuardBoat coastGuardBoat, int x,int y) {
-        if(y==state.grid[0].length)
-            return null;
-        else
-        {
-            coastGuardBoat.y+=1;
-            retNode.actionPerformedOn="Down";
-            applyTimeStep(retNode);
-            return retNode;
-        }
-    }
-
-    private Node applyUpAction(Node retNode, State state, CoastGuardBoat coastGuardBoat,  int x,int y) {
-        if(y==0)
-            return null;
-        else
-        {
-            coastGuardBoat.y-=1;
-            retNode.actionPerformedOn="Up";
-            applyTimeStep(retNode);
-            return retNode;
-        }
-    }
-
-    private Node applyRightAction(Node retNode, State state, CoastGuardBoat coastGuardBoat,  int x,int y) {
-        if(x==state.grid.length)
+        if(x==state.grid.length-1)
             return null;
         else
         {
             coastGuardBoat.x+=1;
-            retNode.actionPerformedOn="Right";
-            applyTimeStep(retNode);
+            retNode.actionPerformedOn="down";
+            applyTimeStep(state);
             return retNode;
         }
     }
 
-    private Node applyLeftAction(Node retNode, State state, CoastGuardBoat coastGuardBoat,  int x,int y) {
+    //returns null if the board is at the end of the grid
+    private Node applyUpAction(Node retNode, State state, CoastGuardBoat coastGuardBoat,  int x,int y) {
         if(x==0)
             return null;
         else
         {
             coastGuardBoat.x-=1;
-            retNode.actionPerformedOn="Left";
-            applyTimeStep(retNode);
+            retNode.actionPerformedOn="up";
+            applyTimeStep(state);
             return retNode;
         }
     }
 
+    //returns null if the board is at the end of the grid
+    private Node applyRightAction(Node retNode, State state, CoastGuardBoat coastGuardBoat,  int x,int y) {
+        if(y==state.grid[0].length-1)
+            return null;
+        else
+        {
+            coastGuardBoat.y+=1;
+            retNode.actionPerformedOn="right";
+            applyTimeStep(state);
+            return retNode;
+        }
+    }
 
+    //returns null if the board is at the end of the grid
+    private Node applyLeftAction(Node retNode, State state, CoastGuardBoat coastGuardBoat,  int x,int y) {
+        if(y==0)
+            return null;
+        else
+        {
+            coastGuardBoat.y-=1;
+            retNode.actionPerformedOn="left";
+            applyTimeStep(state);
+            return retNode;
+        }
+    }
+
+    //returns null if the drop action is not applicable(the coast guard boat is not at a station or the boat doesn't have passengers).
     private Node applyDropAction(Node retNode, State state, CoastGuardBoat coastGuardBoat, StateObject objectAtCoastGuard) {
 
+        if(coastGuardBoat.passengersOnBoat==0)
+            return null;
 
         if(objectAtCoastGuard!=null){
             if(objectAtCoastGuard instanceof Station)
@@ -245,8 +271,8 @@ public class CoastGuard extends SearchProblem{
                 Station station= (Station) objectAtCoastGuard;
                 int numRescued= coastGuardBoat.dropPassengers(station);
                 state.decreaseNumOfUnrescuedPassengers(numRescued);
-                applyTimeStep(retNode);
-                retNode.actionPerformedOn="Drop";
+                applyTimeStep(state);
+                retNode.actionPerformedOn="drop";
                 return retNode;
 
             }
@@ -254,6 +280,7 @@ public class CoastGuard extends SearchProblem{
         return null;
     }
 
+    //returns null if the retrive action is not applicable(the ship is not a wreck or the coast guard is not at wreck or the blackbox is retrived or damaged).
     private Node applyRetrieveAction(Node retNode, State state, CoastGuardBoat coastGuardBoat, StateObject objectAtCoastGuard) {
 
         if(objectAtCoastGuard!=null)
@@ -267,8 +294,8 @@ public class CoastGuard extends SearchProblem{
                         ship.blackBoxTaken=true;
                         state.blackBoxesRetrived++;
                         state.numOfUndamagedBlackBoxes-=1;
-                        applyTimeStep(retNode);
-                        retNode.actionPerformedOn="Retrieve";
+                        applyTimeStep(state);
+                        retNode.actionPerformedOn="retrieve";
                         return retNode;
 
                     }
@@ -282,7 +309,7 @@ public class CoastGuard extends SearchProblem{
         return null;
     }
 
-
+    //returns null if the Pick action is not applicable(the ship is  a wreck or the coast guard is not at a ship or the coast guard boat is full).
     private Node applyPickAction(Node retNode,State state,CoastGuardBoat coastGuardBoat,StateObject objectAtCoastGuard) {
 
         if(coastGuardBoat.isFull())
@@ -298,8 +325,8 @@ public class CoastGuard extends SearchProblem{
                     return null;
                 }else if(ship.numOfPassengers>0){
                     coastGuardBoat.pickPassengersFromShip(ship);
-                    applyTimeStep(retNode);
-                    retNode.actionPerformedOn="Pick";
+                    applyTimeStep(state);
+                    retNode.actionPerformedOn="pickup";
                     return retNode;
                 }
                 else
@@ -318,7 +345,35 @@ public class CoastGuard extends SearchProblem{
 
 
 
-    private void applyTimeStep(Node retNode) {
+    private void applyTimeStep(State state) {
+        StateObject[][] grid = state.grid;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                StateObject sObject = grid[i][j];
+                if(sObject instanceof Ship)
+                {
+                    Ship ship= (Ship) sObject;
+
+                    if(ship.wrecked)
+                    {
+                        ship.damage++;
+                        if(ship.damage==20 && !ship.blackBoxTaken)
+                        {
+                            state.numOfDamagedBlackBoxes++;
+                            state.numOfUndamagedBlackBoxes--;
+                        }
+                    }
+                    else {
+                        ship.numOfPassengers--;
+                        state.numOfUnrescuedPassengers--;
+                        state.numOfDeadPassengers++;
+                        if(ship.numOfPassengers<=0)
+                            ship.wrecked=true;
+                    }
+
+                }
+            }
+        }
     }
 
 
