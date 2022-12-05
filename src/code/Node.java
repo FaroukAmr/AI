@@ -72,14 +72,22 @@ public  class Node {
         }
     }
 
-    public String getAcitonPath() {
+    public String getActionPath() {
         if(actionPerformedOn==null)
             return "";
 //        if(parent==null)
 //            return "";
         String actionPath="";
         Node currParent=parent;
-        actionPath=parent.getAcitonPath()+","+this.actionPerformedOn;
+        actionPath=parent.getActionPath()+","+this.actionPerformedOn;
         return actionPath;
     }
+    public int getDepth(){
+        if(parent==null){
+            return 1;
+        }
+        return parent.getDepth()+1;
+
+    }
+
 }
