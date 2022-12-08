@@ -69,37 +69,37 @@ public  class SearchProcedure {
     public static String search(String searchStrategy, SearchProblem searchProblem){
         String res ="";
         hashMap = new HashMap<String, Integer>();
-       switch (searchStrategy) {
-           case ("BF") :
-               res = BFsearch(searchProblem);
-               break;
-           case("DF"):
-               res = DFsearch(searchProblem);
-               break;
-           case("ID"):
-               res = IDsearch(searchProblem);
-               break;
-           case("DFMD"):
-               res = DFmaxDepthSearch(searchProblem,44);
-               break;
-           case ("GR1"):
-               res= heuristicSearch(searchProblem,1);
-               break;
-           case ("GR2"):
-               res= heuristicSearch(searchProblem,2);
-               break;
-           case ("AS1"):
-               res= heuristicSearch(searchProblem,3);
-               break;
-           case ("AS2"):
-               res= heuristicSearch(searchProblem,4);
-               break;
-           case ("UC"):
-               res= heuristicSearch(searchProblem,5);
-               break;
+        switch (searchStrategy) {
+            case ("BF") :
+                res = BFsearch(searchProblem);
+                break;
+            case("DF"):
+                res = DFsearch(searchProblem);
+                break;
+            case("ID"):
+                res = IDsearch(searchProblem);
+                break;
+            case("DFMD"):
+                res = DFmaxDepthSearch(searchProblem,44);
+                break;
+            case ("GR1"):
+                res= heuristicSearch(searchProblem,1);
+                break;
+            case ("GR2"):
+                res= heuristicSearch(searchProblem,2);
+                break;
+            case ("AS1"):
+                res= heuristicSearch(searchProblem,3);
+                break;
+            case ("AS2"):
+                res= heuristicSearch(searchProblem,4);
+                break;
+            case ("UC"):
+                res= heuristicSearch(searchProblem,5);
+                break;
 
 
-       }
+        }
         return res;
     }
 
@@ -120,7 +120,9 @@ public  class SearchProcedure {
                 plan = plan.substring(1, plan.length());
                 deaths = "" + node.state.numOfDeadPassengers;
                 retrieved = "" + node.state.blackBoxesRetrived;
-
+                if(CoastGuard.enableVisuals){
+                    CoastGuard.visualize(node);
+                }
                 break;
             }
             ArrayList<Node> children = searchProblem.getChildrenNodes(node);
@@ -167,6 +169,9 @@ public  class SearchProcedure {
                 plan=plan.substring(1,plan.length());
                 deaths = ""+node.state.numOfDeadPassengers;
                 retrieved=""+node.state.blackBoxesRetrived;
+                if(CoastGuard.enableVisuals){
+                    CoastGuard.visualize(node);
+                }
 
                 break;
             }
@@ -256,7 +261,9 @@ public  class SearchProcedure {
                 plan=plan.substring(1,plan.length());
                 deaths = ""+node.state.numOfDeadPassengers;
                 retrieved=""+node.state.blackBoxesRetrived;
-
+                if(CoastGuard.enableVisuals){
+                    CoastGuard.visualize(node);
+                }
                 break;
             }
             ArrayList<Node> children = searchProblem.getChildrenNodes(node);
@@ -332,7 +339,9 @@ public  class SearchProcedure {
                 plan = plan.substring(1, plan.length());
                 deaths = "" + node.state.numOfDeadPassengers;
                 retrieved = "" + node.state.blackBoxesRetrived;
-
+                if(CoastGuard.enableVisuals){
+                    CoastGuard.visualize(node);
+                }
                 break;
             }
             ArrayList<Node> children = searchProblem.getChildrenNodes(node);
