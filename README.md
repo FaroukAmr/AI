@@ -1,23 +1,23 @@
 # Artificial Intelligence Project 1
 
-###Team Members
+### Team Members
 ```md
 46-2595 Alfarouk Amr Ali T14
 46- Ahmed Mohamed Ramadan
 46- Ahmed Elghobashy
 ```
-###Brief discussion of the problem
+### Brief discussion of the problem
 ```md
 Given a certain grid that contains :
 1.A coast guard ship at a random location
 2.Several ships scattered at random locations, each has random initial passenger numbers from 1 to 100
 3.Several stations at random locations
 
-And actions such as pick-up, drop, retrieve, and movement in any of the 4 directions.
+Actions such as pick-up, drop, retrieve, and movement in any of the 4 directions.
 We are required to create an agent that acts as a coast guard boat captain using several search procedures.
 ```
 
-###Discussion of the search-tree node ADT implementation
+### Discussion of the search-tree node ADT implementation
 ```md
 Each node contains the following information:
 1. State
@@ -39,7 +39,7 @@ Each node contains the following information:
 4. Action performed to reach this node as a string, null on initial node
 ```
 
-###Discussion of the search problem ADT implementation
+### Discussion of the search problem ADT implementation
 ```md
 Each search problem contains the following information:
 
@@ -64,7 +64,7 @@ Each search problem contains the following information:
     2.4. Action performed to reach this node as a string, null on initial node
 ```
 
-###Discussion of the coast guard problem
+### Discussion of the coast guard problem
 ```md
 The coast guard boat class extends ClassObject, and contains the following information:
 
@@ -76,8 +76,8 @@ The coast guard boat class extends ClassObject, and contains the following infor
 6. Number of remaining space on the coast guard
 ```
 
-###Discussion of the main functions
-####1. CoastGuard class
+### Discussion of the main functions
+#### 1. CoastGuard class
 ```md
 1. solve : a static method that takes the starting grid, the strategy to use,
    and a boolean visualize, the method returns the search result from SearchProcedure.search() method
@@ -87,27 +87,27 @@ The coast guard boat class extends ClassObject, and contains the following infor
 3.getCoastGuardBoatFromStringGrid: a static method that takes the starting grid as an input,
    and returns a CoastGuardBoat object
 ```
-####2. SearchProcedure class
+#### 2. SearchProcedure class
 ```md
 
 ```
 
-###Discussion of the various search algorithms
+### Discussion of the various search algorithms
 ```md
 
 ```
 
-###Discussion of the heuristic functions
+### Discussion of the heuristic functions
 ```md
 
 ```
 
-###Performance comparisons
+### Performance comparisons
 ```md
 
 ```
 
-###Citations
+### Citations
 ```md
 
 ```
