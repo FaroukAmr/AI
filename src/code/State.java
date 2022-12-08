@@ -3,7 +3,6 @@ package code;
 // A class representing the state of a coast guard problem
 public class State implements Cloneable{
     StateObject[][] grid ;
-//UnRescued
     CoastGuardBoat coastGuardBoat;
     int blackBoxesRetrieved;
     int numOfUndamagedBlackBoxes;
