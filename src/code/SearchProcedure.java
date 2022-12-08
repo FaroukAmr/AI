@@ -5,20 +5,20 @@ import java.util.*;
 public  class SearchProcedure {
     String searchStrategy;
     SearchProblem searchProblem;
-    //A hashamp that saves the states so we don't have duplicate states
+    //A hashmap that saves the states, so we don't have duplicate states
     static HashMap<String,Integer> hashMap = new HashMap<String, Integer>();
 
 
     public static void putInHashMap(State state){
 
-        String str =""+state.coastGuardBoat.x+""+state.coastGuardBoat.y+""+state.numOfDeadPassengers+""+state.blackBoxesRetrived+""+state.numOfUndamagedBlackBoxes+""+state.numOfDamagedBlackBoxes+""+state.numOfDeadPassengers+""+state.numOfUnrescuedPassengers+""+state.coastGuardBoat.passengersOnBoat;
+        String str =""+state.coastGuardBoat.x+""+state.coastGuardBoat.y+""+state.numOfDeadPassengers+""+state.blackBoxesRetrieved +""+state.numOfUndamagedBlackBoxes+""+state.numOfDamagedBlackBoxes+""+state.numOfDeadPassengers+""+state.numOfNotRescuedPassengers +""+state.coastGuardBoat.passengersOnBoat;
         hashMap.put(str,1);
 
     }
 
     public static boolean checkHashMap(State state){
 
-        String str =""+state.coastGuardBoat.x+""+state.coastGuardBoat.y+""+state.numOfDeadPassengers+""+state.blackBoxesRetrived+""+state.numOfUndamagedBlackBoxes+""+state.numOfDamagedBlackBoxes+""+state.numOfDeadPassengers+""+state.numOfUnrescuedPassengers+""+state.coastGuardBoat.passengersOnBoat;
+        String str =""+state.coastGuardBoat.x+""+state.coastGuardBoat.y+""+state.numOfDeadPassengers+""+state.blackBoxesRetrieved +""+state.numOfUndamagedBlackBoxes+""+state.numOfDamagedBlackBoxes+""+state.numOfDeadPassengers+""+state.numOfNotRescuedPassengers +""+state.coastGuardBoat.passengersOnBoat;
         return hashMap.get(str)==null;
 
     }
@@ -29,11 +29,11 @@ public  class SearchProcedure {
     }
     public  int heuristicFunctionOne(Node node){
 
-        return 100-node.state.getNumOfUnrescuedPassengers();
+        return 100-node.state.getNumOfNotRescuedPassengers();
     }
     public  int heuristicFunctionTwo(Node node){
 
-        return 100-node.state.getNumOfUnsunkShips();
+        return 100-node.state.getNumOfUnSunkShips();
     }
 
     public static int heuristicFunction(Node node){
@@ -45,7 +45,7 @@ public  class SearchProcedure {
             for (int j = 0; j < grid[i].length; j++) {
                 if(grid[i][j] instanceof Ship){
                     Ship ship = (Ship) grid[i][j];
-                    int distance = manhattenDistance(xCoastGuard,yCoastGuard,ship.x,ship.y);
+                    int distance = manhattanDistance(xCoastGuard,yCoastGuard,ship.x,ship.y);
                     if(distance<nearestShipDis)
                         nearestShipDis=distance;
 
@@ -57,7 +57,7 @@ public  class SearchProcedure {
     }
 
 
-    public static int manhattenDistance(int x1,int y1,int x2, int y2){
+    public static int manhattanDistance(int x1, int y1, int x2, int y2){
         return Math.abs(x1-x2)+Math.abs(y1-y2);
     }
 
@@ -80,7 +80,7 @@ public  class SearchProcedure {
                 res = IDsearch(searchProblem);
                 break;
             case("DFMD"):
-                res = DFmaxDepthSearch(searchProblem,44);
+                res = DFMaxDepthSearch(searchProblem,44);
                 break;
             case ("GR1"):
                 res= heuristicSearch(searchProblem,1);
@@ -109,17 +109,17 @@ public  class SearchProcedure {
         String deaths = "";
         String retrieved = "";
         Stack<Node> stack = new Stack<>();
-        Node intialStateNode = searchProblem.initialStateNode;
-        stack.push(intialStateNode);
-        int numOfnodesExpanded = 0;
+        Node initialStateNode = searchProblem.initialStateNode;
+        stack.push(initialStateNode);
+        int numOfNodesExpanded = 0;
         while (!stack.isEmpty()) {
             Node node = stack.pop();
-            numOfnodesExpanded++;
+            numOfNodesExpanded++;
             if (searchProblem.isGoalState(node)) {
                 plan = node.getActionPath();
                 plan = plan.substring(1, plan.length());
                 deaths = "" + node.state.numOfDeadPassengers;
-                retrieved = "" + node.state.blackBoxesRetrived;
+                retrieved = "" + node.state.blackBoxesRetrieved;
                 if(CoastGuard.enableVisuals){
                     CoastGuard.visualize(node);
                 }
@@ -132,21 +132,12 @@ public  class SearchProcedure {
                     stack.push(n);
                     putInHashMap(n.state);
                     CoastGuardBoat cgb = n.state.coastGuardBoat;
-//                    if(cgb.x ==1 && cgb.y==1)
-//                        System.out.println("Heree");
-//                    if(node.actionPerformedOn=="Pick")
-//                        System.out.println("skfsgfg");
                 }
-//                else if(!checkHashMap(n.state))
-//                {
-////                    System.out.println("dsgfdsf");
-//                    ;
-//                }
 
             }
 
         }
-        return plan+";"+deaths+";"+retrieved+";"+numOfnodesExpanded;
+        return plan+";"+deaths+";"+retrieved+";"+numOfNodesExpanded;
 
     }
 
@@ -157,19 +148,19 @@ public  class SearchProcedure {
         String retrieved="";
         Queue<Node> queue = new LinkedList<>();
         hashMap = new HashMap<>();
-        Node intialStateNode =searchProblem.initialStateNode;
-        queue.add(intialStateNode);
-        int numOfnodesExpanded=0;
+        Node initialStateNode =searchProblem.initialStateNode;
+        queue.add(initialStateNode);
+        int numOfNodesExpanded=0;
         while(!queue.isEmpty())
         {
             Node node =queue.remove();
-            numOfnodesExpanded++;
+            numOfNodesExpanded++;
             if(searchProblem.isGoalState(node))
             {
                 plan = node.getActionPath();
                 plan=plan.substring(1,plan.length());
                 deaths = ""+node.state.numOfDeadPassengers;
-                retrieved=""+node.state.blackBoxesRetrived;
+                retrieved=""+node.state.blackBoxesRetrieved;
                 if(CoastGuard.enableVisuals){
                     CoastGuard.visualize(node);
                 }
@@ -183,36 +174,23 @@ public  class SearchProcedure {
                     queue.add(n);
                     putInHashMap(n.state);
                     CoastGuardBoat cgb = n.state.coastGuardBoat;
-//                    if(cgb.x ==1 && cgb.y==1)
-//                        System.out.println("Heree");
-//                    if(node.actionPerformedOn=="Pick")
-//                        System.out.println("skfsgfg");
                 }
-//                else if(!checkHashMap(n.state))
-//                {
-////                    System.out.println("dsgfdsf");
-//                    ;
-//                }
-
             }
 
         }
 
         System.out.println();
-        return plan+";"+deaths+";"+retrieved+";"+numOfnodesExpanded;
+        return plan+";"+deaths+";"+retrieved+";"+numOfNodesExpanded;
 
     }
     //
     private static String IDsearch(SearchProblem searchProblem) {
-        String resString="";
         String plan="";
-        String deaths="";
-        String retrieved="";
         int depth=1;
         while(true)
         {
-            hashMap = new HashMap<String, Integer>();
-            plan = DFmaxDepthSearch(searchProblem,depth);
+            hashMap = new HashMap<>();
+            plan = DFMaxDepthSearch(searchProblem,depth);
             if(plan!="")
             {
 
@@ -226,7 +204,6 @@ public  class SearchProcedure {
 
 
     private static String heuristicSearch(SearchProblem searchProblem, int heuristicNumber){
-        String resString="";
         String plan="";
         String deaths="";
         String retrieved="";
@@ -249,19 +226,19 @@ public  class SearchProcedure {
                 break;
         }
 
-        Node intialStateNode =searchProblem.initialStateNode;
-        queue.add(intialStateNode);
-        int numOfnodesExpanded=0;
+        Node initialStateNode =searchProblem.initialStateNode;
+        queue.add(initialStateNode);
+        int numOfNodesExpanded=0;
         while(!queue.isEmpty())
         {
             Node node =queue.remove();
-            numOfnodesExpanded++;
+            numOfNodesExpanded++;
             if(searchProblem.isGoalState(node))
             {
                 plan = node.getActionPath();
-                plan=plan.substring(1,plan.length());
+                plan=plan.substring(1);
                 deaths = ""+node.state.numOfDeadPassengers;
-                retrieved=""+node.state.blackBoxesRetrived;
+                retrieved=""+node.state.blackBoxesRetrieved;
                 if(CoastGuard.enableVisuals){
                     CoastGuard.visualize(node);
                 }
@@ -273,7 +250,6 @@ public  class SearchProcedure {
                 if(n!=null && checkHashMap(n.state)) {
                     queue.add(n);
                     putInHashMap(n.state);
-                    CoastGuardBoat cgb = n.state.coastGuardBoat;
 
                 }
 
@@ -281,26 +257,25 @@ public  class SearchProcedure {
             }
 
         }
-        return plan+";"+deaths+";"+retrieved+";"+numOfnodesExpanded;
+        return plan+";"+deaths+";"+retrieved+";"+numOfNodesExpanded;
     }
-    //optimize DFmaxDepthSearch
-    private static String DFmaxDepthSearch2(SearchProblem searchProblem,int maxDepth) {
-        String resString = "";
+    //optimize DFMaxDepthSearch
+    private static String DFMaxDepthSearch2(SearchProblem searchProblem,int maxDepth) {
         String plan = "";
         String deaths = "";
         String retrieved = "";
         Stack<Node> stack = new Stack<>();
-        Node intialStateNode = searchProblem.initialStateNode;
-        stack.push(intialStateNode);
-        int numOfnodesExpanded = 0;
+        Node initialStateNode = searchProblem.initialStateNode;
+        stack.push(initialStateNode);
+        int numOfNodesExpanded = 0;
         while (!stack.isEmpty()) {
             Node node = stack.pop();
-            numOfnodesExpanded++;
+            numOfNodesExpanded++;
             if (searchProblem.isGoalState(node)) {
                 plan = node.getActionPath();
                 plan = plan.substring(1, plan.length());
                 deaths = "" + node.state.numOfDeadPassengers;
-                retrieved = "" + node.state.blackBoxesRetrived;
+                retrieved = "" + node.state.blackBoxesRetrieved;
 
                 break;
             }
@@ -317,29 +292,27 @@ public  class SearchProcedure {
             }
 
         }
-        return plan + ";" + deaths + ";" + retrieved + ";" + numOfnodesExpanded;
+        return plan + ";" + deaths + ";" + retrieved + ";" + numOfNodesExpanded;
     }
 
 
 
-    private static String DFmaxDepthSearch(SearchProblem searchProblem,int d){
-        String resString = "";
+    private static String DFMaxDepthSearch(SearchProblem searchProblem, int d){
         String plan = "";
         String deaths = "";
         String retrieved = "";
         Stack<Node> stack = new Stack<>();
-        Node intialStateNode = searchProblem.initialStateNode;
-        stack.push(intialStateNode);
-        int numOfnodesExpanded = 0;
-        int currentDepth=1;
+        Node initialStateNode = searchProblem.initialStateNode;
+        stack.push(initialStateNode);
+        int numOfNodesExpanded = 0;
         while (!stack.isEmpty()) {
             Node node = stack.pop();
-            numOfnodesExpanded++;
+            numOfNodesExpanded++;
             if (searchProblem.isGoalState(node)) {
                 plan = node.getActionPath();
-                plan = plan.substring(1, plan.length());
+                plan = plan.substring(1);
                 deaths = "" + node.state.numOfDeadPassengers;
-                retrieved = "" + node.state.blackBoxesRetrived;
+                retrieved = "" + node.state.blackBoxesRetrieved;
                 if(CoastGuard.enableVisuals){
                     CoastGuard.visualize(node);
                 }
@@ -352,7 +325,6 @@ public  class SearchProcedure {
                     if (n != null && checkHashMap(n.state)) {
                         stack.push(n);
                         putInHashMap(n.state);
-                        CoastGuardBoat cgb = n.state.coastGuardBoat;
                     }
 
                 }
@@ -363,7 +335,7 @@ public  class SearchProcedure {
         if(plan==""){
             return "";
         }
-        return plan+";"+deaths+";"+retrieved+";"+numOfnodesExpanded;
+        return plan+";"+deaths+";"+retrieved+";"+numOfNodesExpanded;
     }
     public static void main(String[] args){
         String grid0 = "5,6;50;0,1;0,4,3,3;1,1,90;";

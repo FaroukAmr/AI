@@ -29,10 +29,10 @@ public class CoastGuard extends SearchProblem{
 
         String retString = yDimension + "," + xDimension + ";" + cgb.x + "," + cgb.y + ";";
         while (numOfStations > 0) {
-            int[] coorddinates = generateRandomCoordinate(xDimension, yDimension);
-            if (grid[coorddinates[0]][coorddinates[1]] == null) {
-                grid[coorddinates[0]][coorddinates[1]] = new Station(coorddinates[0], coorddinates[1]);
-                retString +=  + coorddinates[0] + "," + coorddinates[1]+",";
+            int[] coordinates = generateRandomCoordinate(xDimension, yDimension);
+            if (grid[coordinates[0]][coordinates[1]] == null) {
+                grid[coordinates[0]][coordinates[1]] = new Station(coordinates[0], coordinates[1]);
+                retString +=  + coordinates[0] + "," + coordinates[1]+",";
                 numOfStations--;
             }
 
@@ -41,10 +41,10 @@ public class CoastGuard extends SearchProblem{
         retString=retString.substring(0,retString.length()-1);
         retString += ";";
         while (numOfShips > 0) {
-            int[] coorddinates = generateRandomCoordinate(xDimension, yDimension);
-            if (grid[coorddinates[0]][coorddinates[1]] == null) {
-                grid[coorddinates[0]][coorddinates[1]] = new Ship(shipCapacity, coorddinates[0], coorddinates[1]);
-                retString +=  coorddinates[0] + "," + coorddinates[1] + "," + shipCapacity+"," ;
+            int[] coordinates = generateRandomCoordinate(xDimension, yDimension);
+            if (grid[coordinates[0]][coordinates[1]] == null) {
+                grid[coordinates[0]][coordinates[1]] = new Ship(shipCapacity, coordinates[0], coordinates[1]);
+                retString +=  coordinates[0] + "," + coordinates[1] + "," + shipCapacity+"," ;
                 numOfShips--;
             }
         }
@@ -64,11 +64,11 @@ public class CoastGuard extends SearchProblem{
     }
 
     public static String solve(String grid, String strategy, boolean visualize) {
-        StateObject[][] intialGridArray = genGridFromStringGrid(grid);
+        StateObject[][] initialGridArray = genGridFromStringGrid(grid);
         CoastGuardBoat coastGuardBoat= getCoastGuardBoatFromStringGrid(grid);
-        State intialState = new State(intialGridArray,coastGuardBoat);
-        Node intialNodeState = new Node(intialState,new Node[]{},null);
-        CoastGuard coastGuardProblem = new CoastGuard(intialNodeState);
+        State initialState = new State(initialGridArray,coastGuardBoat);
+        Node initialNodeState = new Node(initialState,new Node[]{},null);
+        CoastGuard coastGuardProblem = new CoastGuard(initialNodeState);
         enableVisuals=visualize;
         return SearchProcedure.search(strategy,coastGuardProblem);
     }
@@ -161,7 +161,7 @@ public class CoastGuard extends SearchProblem{
     @Override
     //checks for the goal state if there is no more blackboxes or passengers to be rescued(if they are on the boat they are not rescued yet).
     public boolean isGoalState(Node node) {
-        if(node.state.numOfUndamagedBlackBoxes==0 && node.state.getNumOfUnrescuedPassengers()==0 && node.state.coastGuardBoat.passengersOnBoat==0)
+        if(node.state.numOfUndamagedBlackBoxes==0 && node.state.getNumOfNotRescuedPassengers()==0 && node.state.coastGuardBoat.passengersOnBoat==0)
             return true;
         else
             return false;
@@ -268,7 +268,7 @@ public class CoastGuard extends SearchProblem{
             {
                 Station station= (Station) objectAtCoastGuard;
                 int numRescued= coastGuardBoat.dropPassengers(station);
-                state.decreaseNumOfUnrescuedPassengers(numRescued);
+                state.decreaseNumOfUnRescuedPassengers(numRescued);
                 applyTimeStep(state);
                 retNode.actionPerformedOn="drop";
                 return retNode;
@@ -290,7 +290,7 @@ public class CoastGuard extends SearchProblem{
                     if(!ship.blackBoxTaken && ship.damage<20)
                     {
                         ship.blackBoxTaken=true;
-                        state.blackBoxesRetrived++;
+                        state.blackBoxesRetrieved++;
                         state.numOfUndamagedBlackBoxes-=1;
                         applyTimeStep(state);
                         retNode.actionPerformedOn="retrieve";
@@ -363,7 +363,7 @@ public class CoastGuard extends SearchProblem{
                     }
                     else {
                         ship.numOfPassengers--;
-                        state.numOfUnrescuedPassengers--;
+                        state.numOfNotRescuedPassengers--;
                         state.numOfDeadPassengers++;
                         if(ship.numOfPassengers<=0) {
                             ship.wrecked = true;

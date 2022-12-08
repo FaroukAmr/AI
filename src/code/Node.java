@@ -48,20 +48,10 @@ public  class Node {
     public Node createChildNode(){
 
         Node retNode = new Node(this);
-//        retNode.children= new Node[children.length];
-        //cloneChildrenNodes(this,retNode);
         retNode.state=this.state.clone();
 
         return retNode;
     }
-
-    //This is a method that creates a deepClone of the state of the node in the other node
-//    private void cloneNodeState(code.Node node, code.Node cloneNode) {
-//        for (int i=0;i< node.state.length;i++) {
-//
-//            cloneNode.state[i]= node.state[i].clone();
-//        }
-//    }
 
     //A method that puts the same children nodes in the original node in another code.Node
     public static void cloneChildrenNodes(Node originalNode,Node cloneNode)
@@ -75,8 +65,6 @@ public  class Node {
     public String getActionPath() {
         if(actionPerformedOn==null)
             return "";
-//        if(parent==null)
-//            return "";
         String actionPath="";
         Node currParent=parent;
         actionPath=parent.getActionPath()+","+this.actionPerformedOn;

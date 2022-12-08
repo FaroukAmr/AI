@@ -6,8 +6,8 @@ public class NodeComparatorOne implements Comparator<Node> {
 
     @Override
     public int compare(Node a, Node b) {
-        int heuristicA=a.state.getNumOfUnrescuedPassengers();
-        int heuristicB=b.state.getNumOfUnrescuedPassengers();
+        int heuristicA=a.state.getNumOfNotRescuedPassengers();
+        int heuristicB=b.state.getNumOfNotRescuedPassengers();
 
         if(heuristicA<heuristicB){
             return -1;
