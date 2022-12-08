@@ -2,8 +2,6 @@ package code;
 
 public class CoastGuard extends SearchProblem{
     // StateObject[][] grid;
-    static int numOfDeaths=0;
-    static int numOfRetrived=0;
     static String[] actions = {"Pick-up","Drop","Retrieve","Up","Down","Left","Right"};
     static boolean enableVisuals=false;
 
@@ -31,10 +29,10 @@ public class CoastGuard extends SearchProblem{
 
         String retString = yDimension + "," + xDimension + ";" + cgb.x + "," + cgb.y + ";";
         while (numOfStations > 0) {
-            int[] coorddinates = generateRandomCoordinate(xDimension, yDimension);
-            if (grid[coorddinates[0]][coorddinates[1]] == null) {
-                grid[coorddinates[0]][coorddinates[1]] = new Station(coorddinates[0], coorddinates[1]);
-                retString +=  + coorddinates[0] + "," + coorddinates[1]+",";
+            int[] coordinates = generateRandomCoordinate(xDimension, yDimension);
+            if (grid[coordinates[0]][coordinates[1]] == null) {
+                grid[coordinates[0]][coordinates[1]] = new Station(coordinates[0], coordinates[1]);
+                retString +=  + coordinates[0] + "," + coordinates[1]+",";
                 numOfStations--;
             }
 
@@ -43,10 +41,10 @@ public class CoastGuard extends SearchProblem{
         retString=retString.substring(0,retString.length()-1);
         retString += ";";
         while (numOfShips > 0) {
-            int[] coorddinates = generateRandomCoordinate(xDimension, yDimension);
-            if (grid[coorddinates[0]][coorddinates[1]] == null) {
-                grid[coorddinates[0]][coorddinates[1]] = new Ship(shipCapacity, coorddinates[0], coorddinates[1]);
-                retString +=  coorddinates[0] + "," + coorddinates[1] + "," + shipCapacity+"," ;
+            int[] coordinates = generateRandomCoordinate(xDimension, yDimension);
+            if (grid[coordinates[0]][coordinates[1]] == null) {
+                grid[coordinates[0]][coordinates[1]] = new Ship(shipCapacity, coordinates[0], coordinates[1]);
+                retString +=  coordinates[0] + "," + coordinates[1] + "," + shipCapacity+"," ;
                 numOfShips--;
             }
         }
@@ -66,11 +64,11 @@ public class CoastGuard extends SearchProblem{
     }
 
     public static String solve(String grid, String strategy, boolean visualize) {
-        StateObject[][] intialGridArray = genGridFromStringGrid(grid);
+        StateObject[][] initialGridArray = genGridFromStringGrid(grid);
         CoastGuardBoat coastGuardBoat= getCoastGuardBoatFromStringGrid(grid);
-        State intialState = new State(intialGridArray,coastGuardBoat);
-        Node intialNodeState = new Node(intialState,new Node[]{},null);
-        CoastGuard coastGuardProblem = new CoastGuard(intialNodeState);
+        State initialState = new State(initialGridArray,coastGuardBoat);
+        Node initialNodeState = new Node(initialState,new Node[]{},null);
+        CoastGuard coastGuardProblem = new CoastGuard(initialNodeState);
         enableVisuals=visualize;
         return SearchProcedure.search(strategy,coastGuardProblem);
     }
@@ -147,7 +145,23 @@ public class CoastGuard extends SearchProblem{
 
     public static void main(String[] args)
     {
-        solve("5,5;69;3,3;0,0,0,1,1,0;0,3,78,1,2,2,1,3,14,4,4,9;","BF",true);
+
+        solve("10,6;59;1,7;0,0,2,2,3,0,5,3;1,3,69,3,4,80,4,7,94,4,9,14,5,2,39;","UC",false);
+        solve("7,5;100;3,4;2,6,3,5;0,0,4,0,1,8,1,4,77,1,5,1,3,2,94,4,3,46;","UC",false);
+        solve("6,6;74;1,1;0,3,1,0,2,0,2,4,4,0,4,2,5,0;0,0,78,3,3,5,4,3,40;","UC",false);
+
+        //30%   5GB     18726MS     BFS
+        //13%   1.8GB   46MS        DFS
+        //15%   3GB     72492MS     ID
+        //16%   2.9GB   17123MS      DFMD
+        //10%   1.8GB   53MS        GR1
+        //20%   2.3GB   1185MS      GR2
+        //14%   1.8GB   404MS      AS1
+        //14%   1.9GB   575MS      AS2
+        //19%   2.1GB   391MS      UC
+
+
+
     }
 
     @Override
@@ -163,7 +177,7 @@ public class CoastGuard extends SearchProblem{
     @Override
     //checks for the goal state if there is no more blackboxes or passengers to be rescued(if they are on the boat they are not rescued yet).
     public boolean isGoalState(Node node) {
-        if(node.state.numOfUndamagedBlackBoxes==0 && node.state.getNumOfUnrescuedPassengers()==0 && node.state.coastGuardBoat.passengersOnBoat==0)
+        if(node.state.numOfUndamagedBlackBoxes==0 && node.state.getNumUnRescuedPassengers()==0 && node.state.coastGuardBoat.passengersOnBoat==0)
             return true;
         else
             return false;
@@ -270,7 +284,7 @@ public class CoastGuard extends SearchProblem{
             {
                 Station station= (Station) objectAtCoastGuard;
                 int numRescued= coastGuardBoat.dropPassengers(station);
-                state.decreaseNumOfUnrescuedPassengers(numRescued);
+                state.decreaseNumOfUnRescuedPassengers(numRescued);
                 applyTimeStep(state);
                 retNode.actionPerformedOn="drop";
                 return retNode;
@@ -292,7 +306,7 @@ public class CoastGuard extends SearchProblem{
                     if(!ship.blackBoxTaken && ship.damage<20)
                     {
                         ship.blackBoxTaken=true;
-                        state.blackBoxesRetrived++;
+                        state.blackBoxesRetrieved++;
                         state.numOfUndamagedBlackBoxes-=1;
                         applyTimeStep(state);
                         retNode.actionPerformedOn="retrieve";
@@ -365,10 +379,12 @@ public class CoastGuard extends SearchProblem{
                     }
                     else {
                         ship.numOfPassengers--;
-                        state.numOfUnrescuedPassengers--;
+                        state.numUnRescuedPassengers--;
                         state.numOfDeadPassengers++;
-                        if(ship.numOfPassengers<=0)
-                            ship.wrecked=true;
+                        if(ship.numOfPassengers<=0) {
+                            ship.wrecked = true;
+                            ship.damage++;
+                        }
                     }
 
                 }

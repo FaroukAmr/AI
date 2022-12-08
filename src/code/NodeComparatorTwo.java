@@ -7,8 +7,6 @@ public class NodeComparatorTwo implements Comparator<Node> {
     public int compare(Node a, Node b) {
         int heuristicA=SearchProcedure.heuristicFunction(a);
         int heuristicB=SearchProcedure.heuristicFunction(b);
-        //int heuristicA=a.state.getNumOfUnsunkShips();
-        //int heuristicB=b.state.getNumOfUnsunkShips();
         if(heuristicA<heuristicB){
             return -1;
         }

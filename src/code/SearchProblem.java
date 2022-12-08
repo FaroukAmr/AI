@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public abstract class SearchProblem {
     String[] actions;
     Node initialStateNode;
-    int cost;
 
     public SearchProblem(String[] actions, Node initialStateNode) {
         this.actions = actions;

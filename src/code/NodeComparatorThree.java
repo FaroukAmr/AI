@@ -8,8 +8,8 @@ public class NodeComparatorThree implements Comparator<Node> {
     public int compare(Node a, Node b) {
         CoastGuard A = new CoastGuard(a);
         CoastGuard B = new CoastGuard(b);
-        int heuristicA=a.state.getNumOfUnrescuedPassengers() +A.costFunction(a);
-        int heuristicB=b.state.getNumOfUnrescuedPassengers()+B.costFunction(b);
+        int heuristicA=a.state.getNumUnRescuedPassengers() +A.costFunction(a);
+        int heuristicB=b.state.getNumUnRescuedPassengers()+B.costFunction(b);
         if(heuristicA<heuristicB){
             return -1;
         }
