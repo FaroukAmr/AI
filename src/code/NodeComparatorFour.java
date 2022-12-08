@@ -9,8 +9,8 @@ public class NodeComparatorFour implements Comparator<Node> {
     public int compare(Node a, Node b) {
         CoastGuard A = new CoastGuard(a);
         CoastGuard B = new CoastGuard(b);
-        int heuristicA=a.state.getNumOfUnsunkShips()+A.costFunction(a);
-        int heuristicB=b.state.getNumOfUnsunkShips()+B.costFunction(b);
+        int heuristicA=SearchProcedure.heuristicFunction(a)+A.costFunction(a);
+        int heuristicB=SearchProcedure.heuristicFunction(b)+B.costFunction(b);
         if(heuristicA<heuristicB){
             return -1;
         }
