@@ -36,6 +36,31 @@ public  class SearchProcedure {
         return 100-node.state.getNumOfUnsunkShips();
     }
 
+    public static int heuristicFunction(Node node){
+        int xCoastGuard=node.state.coastGuardBoat.x;
+        int yCoastGuard=node.state.coastGuardBoat.y;
+        StateObject[][] grid = node.state.grid;
+        int nearestShipDis=100000;
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if(grid[i][j] instanceof Ship){
+                    Ship ship = (Ship) grid[i][j];
+                    int distance = manhattenDistance(xCoastGuard,yCoastGuard,ship.x,ship.y);
+                    if(distance<nearestShipDis)
+                        nearestShipDis=distance;
+
+                }
+
+            }
+        }
+        return nearestShipDis;
+    }
+
+
+    public static int manhattenDistance(int x1,int y1,int x2, int y2){
+        return Math.abs(x1-x2)+Math.abs(y1-y2);
+    }
+
     public SearchProcedure(String searchStrategy, SearchProblem searchProblem) {
         this.searchStrategy = searchStrategy;
         this.searchProblem = searchProblem;
@@ -58,19 +83,19 @@ public  class SearchProcedure {
                res = DFmaxDepthSearch(searchProblem,44);
                break;
            case ("GR1"):
-               res=greedySearch(searchProblem,1);
+               res= heuristicSearch(searchProblem,1);
                break;
            case ("GR2"):
-               res=greedySearch(searchProblem,2);
+               res= heuristicSearch(searchProblem,2);
                break;
            case ("AS1"):
-               res=greedySearch(searchProblem,3);
+               res= heuristicSearch(searchProblem,3);
                break;
            case ("AS2"):
-               res=greedySearch(searchProblem,4);
+               res= heuristicSearch(searchProblem,4);
                break;
            case ("UC"):
-               res=greedySearch(searchProblem,5);
+               res= heuristicSearch(searchProblem,5);
                break;
 
 
@@ -171,24 +196,30 @@ public  class SearchProcedure {
         return plan+";"+deaths+";"+retrieved+";"+numOfnodesExpanded;
 
     }
-    private static String IDsearch(SearchProblem searchProblem){
-        int stoppingDepth=1000;
-        int d=0;
-        Node intialStateNode = searchProblem.initialStateNode.cloneNode();
+    //
+    private static String IDsearch(SearchProblem searchProblem) {
+        String resString="";
+        String plan="";
+        String deaths="";
+        String retrieved="";
+        int depth=1;
+        while(true)
+        {
+            hashMap = new HashMap<String, Integer>();
+            plan = DFmaxDepthSearch(searchProblem,depth);
+            if(plan!="")
+            {
 
-        //String res=DFmaxDepthSearch(searchProblem,100);
-
-        while (d<stoppingDepth){
-            CoastGuard p =new CoastGuard(intialStateNode);
-            String temp =DFmaxDepthSearch(p,100);
-            if(temp!=null)
-                return temp;
-            d++;
+                break;
+            }
+            depth++;
         }
-        return null;
+        return plan;
+
     }
 
-    private static String greedySearch(SearchProblem searchProblem,int heuristicNumber){
+
+    private static String heuristicSearch(SearchProblem searchProblem, int heuristicNumber){
         String resString="";
         String plan="";
         String deaths="";
@@ -244,6 +275,44 @@ public  class SearchProcedure {
         }
         return plan+";"+deaths+";"+retrieved+";"+numOfnodesExpanded;
     }
+    //optimize DFmaxDepthSearch
+    private static String DFmaxDepthSearch2(SearchProblem searchProblem,int maxDepth) {
+        String resString = "";
+        String plan = "";
+        String deaths = "";
+        String retrieved = "";
+        Stack<Node> stack = new Stack<>();
+        Node intialStateNode = searchProblem.initialStateNode;
+        stack.push(intialStateNode);
+        int numOfnodesExpanded = 0;
+        while (!stack.isEmpty()) {
+            Node node = stack.pop();
+            numOfnodesExpanded++;
+            if (searchProblem.isGoalState(node)) {
+                plan = node.getActionPath();
+                plan = plan.substring(1, plan.length());
+                deaths = "" + node.state.numOfDeadPassengers;
+                retrieved = "" + node.state.blackBoxesRetrived;
+
+                break;
+            }
+            if (node.getDepth() < maxDepth) {
+                ArrayList<Node> children = searchProblem.getChildrenNodes(node);
+                for (Node n :
+                        children) {
+                    if (n != null && checkHashMap(n.state)) {
+                        stack.push(n);
+                        putInHashMap(n.state);
+                        CoastGuardBoat cgb = n.state.coastGuardBoat;
+                    }
+                }
+            }
+
+        }
+        return plan + ";" + deaths + ";" + retrieved + ";" + numOfnodesExpanded;
+    }
+
+
 
     private static String DFmaxDepthSearch(SearchProblem searchProblem,int d){
         String resString = "";
@@ -282,7 +351,7 @@ public  class SearchProcedure {
 
         }
         if(plan==""){
-            return null;
+            return "";
         }
         return plan+";"+deaths+";"+retrieved+";"+numOfnodesExpanded;
     }

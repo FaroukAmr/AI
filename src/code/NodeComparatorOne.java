@@ -8,6 +8,7 @@ public class NodeComparatorOne implements Comparator<Node> {
     public int compare(Node a, Node b) {
         int heuristicA=a.state.getNumOfUnrescuedPassengers();
         int heuristicB=b.state.getNumOfUnrescuedPassengers();
+
         if(heuristicA<heuristicB){
             return -1;
         }
@@ -16,4 +17,6 @@ public class NodeComparatorOne implements Comparator<Node> {
         return 0;
 
     }
+
+
 }

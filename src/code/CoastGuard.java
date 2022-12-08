@@ -75,6 +75,7 @@ public class CoastGuard extends SearchProblem{
         return SearchProcedure.search(strategy,coastGuardProblem);
     }
 
+
     //creates coast guard boat object from the string represntation of the grid and returns it
     private static CoastGuardBoat getCoastGuardBoatFromStringGrid(String grid){
         int[] coastGuardCoordinates = getCoastGuardCoardinatesFromStringGrid(grid);
