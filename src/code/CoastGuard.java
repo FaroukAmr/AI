@@ -26,9 +26,9 @@ public class CoastGuard extends SearchProblem{
         StateObject[][] grid = new StateObject[xDimension][yDimension];
 
         int[] coastGuarddIntialCoordinate = generateRandomCoordinate(xDimension, yDimension);
-        grid[coastGuarddIntialCoordinate[0]][coastGuarddIntialCoordinate[1]] = new CoastGuardBoat(coastGuardCapacity, xDimension, yDimension);
+        CoastGuardBoat cgb = new CoastGuardBoat(coastGuardCapacity, xDimension, yDimension);
 
-        String retString = xDimension + "," + yDimension + ";" + coastGuarddIntialCoordinate[0] + "," + coastGuarddIntialCoordinate[1] + ";";
+        String retString = yDimension + "," + xDimension + ";" + cgb.x + "," + cgb.y + ";";
         while (numOfStations > 0) {
             int[] coorddinates = generateRandomCoordinate(xDimension, yDimension);
             if (grid[coorddinates[0]][coorddinates[1]] == null) {
