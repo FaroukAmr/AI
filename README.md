@@ -112,17 +112,17 @@ The coast guard boat class extends ClassObject, and contains the following infor
 3. "6,6;74;1,1;0,3,1,0,2,0,2,4,4,0,4,2,5,0;0,0,78,3,3,5,4,3,40;"
 ```
 
-| CPU | Memory | Time     | Algorithm |
-|-----|--------|----------|-----------|
-| 30% | 5GB    | 18726 ms | BFS       |
-| 13% | 1.8GB  | 46 ms    | DFS       |
-| 15% | 3GB    | 72492 ms | ID        |
-| 16% | 2.9GB  | 17123 ms | DFMD      |
-| 10% | 1.8GB  | 53 ms    | GR1       |
-| 20% | 2.3GB  | 1185 ms  | GR2       |
-| 14% | 1.8GB  | 404 ms   | AS1       |
-| 14% | 1.9GB  | 575 ms   | AS2       |
-| 19% | 2.1GB  | 391 ms   | UC        |
+| CPU | Memory | Time     | Expanded Nodes | Algorithm |
+|-----|--------|----------|----------------|-----------|
+| 30% | 5GB    | 18726 ms |                | BFS       |
+| 13% | 1.8GB  | 46 ms    |                | DFS       |
+| 15% | 3GB    | 72492 ms |                | ID        |
+| 16% | 2.9GB  | 17123 ms |                | DFMD      |
+| 10% | 1.8GB  | 53 ms    |                | GR1       |
+| 20% | 2.3GB  | 1185 ms  |                | GR2       |
+| 14% | 1.8GB  | 404 ms   |                | AS1       |
+| 14% | 1.9GB  | 575 ms   |                | AS2       |
+| 19% | 2.1GB  | 391 ms   |                | UC        |
 
 ```md
 CPU: CPU utilization's percentage
