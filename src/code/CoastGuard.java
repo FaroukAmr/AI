@@ -5,6 +5,7 @@ public class CoastGuard extends SearchProblem{
     static int numOfDeaths=0;
     static int numOfRetrived=0;
     static String[] actions = {"Pick-up","Drop","Retrieve","Up","Down","Left","Right"};
+    static boolean enableVisuals=false;
 
     public  CoastGuard(Node intialNodeState) {
         super(actions,intialNodeState);
@@ -70,15 +71,13 @@ public class CoastGuard extends SearchProblem{
         State intialState = new State(intialGridArray,coastGuardBoat);
         Node intialNodeState = new Node(intialState,new Node[]{},null);
         CoastGuard coastGuardProblem = new CoastGuard(intialNodeState);
-
-
+        enableVisuals=visualize;
         return SearchProcedure.search(strategy,coastGuardProblem);
     }
 
-
-    //creates coast guard boat object from the string represntation of the grid and returns it
+    //creates coast guard boat object from the string representation of the grid and returns it
     private static CoastGuardBoat getCoastGuardBoatFromStringGrid(String grid){
-        int[] coastGuardCoordinates = getCoastGuardCoardinatesFromStringGrid(grid);
+        int[] coastGuardCoordinates = getCoastGuardCoordinatesFromStringGrid(grid);
         int coastGuardCapacity= getCoastGuardCapacityFromStingGrid(grid);
         CoastGuardBoat coastGuardBoat= new CoastGuardBoat(coastGuardCapacity,coastGuardCoordinates[0],coastGuardCoordinates[1]);
         return coastGuardBoat;
@@ -93,8 +92,8 @@ public class CoastGuard extends SearchProblem{
 
 
 
-   //gets the coordinates of the coast guard boat from the string represntaion of the  grid
-    private static int[] getCoastGuardCoardinatesFromStringGrid(String grid) {
+    //gets the coordinates of the coast guard boat from the string representation of the  grid
+    private static int[] getCoastGuardCoordinatesFromStringGrid(String grid) {
         String[] gridInfo=grid.split(";");
         String[] cgPos = gridInfo[2].split(",");
         int cgX = Integer.parseInt(cgPos[0]);
@@ -122,7 +121,7 @@ public class CoastGuard extends SearchProblem{
         // I1X, I1Y, I2X, I2Y, ...IiX, IiY index:3
         String[] stations = gridInfo[3].split(",");
 
-        //S1X, S1Y, S1P assengers, S2X, S2Y, S2P assengers, ...SjX, SjY, SjP assengers index : 4
+        //S1X, S1Y, S1P passengers, S2X, S2Y, S2P passengers, ...SjX, SjY, SjP passengers index : 4
         String[] ships = gridInfo[4].split(",");
 
         StateObject[][] resGrid= new StateObject[m][n];
@@ -137,18 +136,18 @@ public class CoastGuard extends SearchProblem{
 
         //add ships to grid
         for (int i = 0; i < ships.length; i+=3) {
-            int x= Integer.parseInt(ships[i]);
-            int y= Integer.parseInt(ships[i+1]);
-            int num= Integer.parseInt(ships[i+2]);
-            Ship ship = new Ship(num,x,y);
-            resGrid[x][y]=ship;
+            int x = Integer.parseInt(ships[i]);
+            int y = Integer.parseInt(ships[i + 1]);
+            int num = Integer.parseInt(ships[i + 2]);
+            Ship ship = new Ship(num, x, y);
+            resGrid[x][y] = ship;
         }
         return resGrid;
     }
 
     public static void main(String[] args)
     {
-        solve("3,4;97;1,2;0,1;3,2,65;","BF",false);
+        solve("5,5;69;3,3;0,0,0,1,1,0;0,3,78,1,2,2,1,3,14,4,4,9;","BF",true);
     }
 
     @Override
@@ -185,7 +184,7 @@ public class CoastGuard extends SearchProblem{
 
         switch (action) {
             case ("Pick-up"):
-               return applyPickAction(retNode,state,coastGuardBoat,objectAtCoastGuard);
+                return applyPickAction(retNode,state,coastGuardBoat,objectAtCoastGuard);
             case ("Drop"):
                 return applyDropAction(retNode,state,coastGuardBoat,objectAtCoastGuard);
             case ("Retrieve"):
@@ -281,7 +280,7 @@ public class CoastGuard extends SearchProblem{
         return null;
     }
 
-    //returns null if the retrive action is not applicable(the ship is not a wreck or the coast guard is not at wreck or the blackbox is retrived or damaged).
+    //returns null if the retrieve action is not applicable(the ship is not a wreck or the coast guard is not at wreck or the blackbox is retrieved or damaged).
     private Node applyRetrieveAction(Node retNode, State state, CoastGuardBoat coastGuardBoat, StateObject objectAtCoastGuard) {
 
         if(objectAtCoastGuard!=null)
@@ -340,7 +339,7 @@ public class CoastGuard extends SearchProblem{
 
         }
 
-            return null;
+        return null;
 
     }
 
@@ -375,6 +374,70 @@ public class CoastGuard extends SearchProblem{
                 }
             }
         }
+
+    }
+
+    public static void visualize(Node node){
+        if(node.parent!=null){
+            visualize(node.parent);
+        }
+
+        StateObject[][] grid = node.state.grid;
+        CoastGuardBoat coastGuardBoat = node.state.coastGuardBoat;
+        int coastGuardX=coastGuardBoat.x;
+        int coastGuardY=coastGuardBoat.y;
+        int coastGuardPassengers= coastGuardBoat.passengersOnBoat;
+
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if(coastGuardX==i && coastGuardY==j){
+                    if(coastGuardPassengers>9){
+                        System.out.print("COASTGUARD("+coastGuardPassengers+") ");
+
+                    }else{
+                        System.out.print("COASTGUARD("+coastGuardPassengers+")  ");
+
+                    }
+                    continue;
+                }
+                if(grid[i][j]==null){
+                    System.out.print("EMPTY          ");
+                }else{
+                    if(grid[i][j] instanceof Ship){
+                        Ship ship= (Ship) grid[i][j];
+                        int passengers= ship.numOfPassengers;
+                        boolean wrecked= ship.wrecked;
+                        if(wrecked){
+                            int blackBoxDamage = ship.damage;
+                            if(blackBoxDamage>9){
+                                System.out.print("WRECK("+blackBoxDamage+")      ");
+
+                            }else{
+                                System.out.print("WRECK("+blackBoxDamage+")       ");
+
+                            }
+                        }else{
+                            if(passengers>9){
+                                System.out.print("SHIP("+passengers+")       ");
+
+                            }else{
+                                System.out.print("SHIP("+passengers+")        ");
+
+                            }
+
+                        }
+
+                    }
+                    if(grid[i][j] instanceof Station){
+                        System.out.print("STATION        ");
+                    }
+                }
+
+            }
+            System.out.println();
+
+        }
+        System.out.println();
     }
 
 
