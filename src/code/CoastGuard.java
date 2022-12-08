@@ -2,8 +2,6 @@ package code;
 
 public class CoastGuard extends SearchProblem{
     // StateObject[][] grid;
-    static int numOfDeaths=0;
-    static int numOfRetrived=0;
     static String[] actions = {"Pick-up","Drop","Retrieve","Up","Down","Left","Right"};
     static boolean enableVisuals=false;
 
@@ -367,8 +365,10 @@ public class CoastGuard extends SearchProblem{
                         ship.numOfPassengers--;
                         state.numOfUnrescuedPassengers--;
                         state.numOfDeadPassengers++;
-                        if(ship.numOfPassengers<=0)
-                            ship.wrecked=true;
+                        if(ship.numOfPassengers<=0) {
+                            ship.wrecked = true;
+                            ship.damage++;
+                        }
                     }
 
                 }

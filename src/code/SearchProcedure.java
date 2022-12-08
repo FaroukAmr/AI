@@ -11,14 +11,14 @@ public  class SearchProcedure {
 
     public static void putInHashMap(State state){
 
-        String str =""+state.coastGuardBoat.x+""+state.coastGuardBoat.y+""+state.numOfDeath+""+state.numRetrived+""+state.numOfUndamagedBlackBoxes+""+state.numOfDamagedBlackBoxes+""+state.numOfDeadPassengers+""+state.numOfUnrescuedPassengers;
+        String str =""+state.coastGuardBoat.x+""+state.coastGuardBoat.y+""+state.numOfDeadPassengers+""+state.blackBoxesRetrived+""+state.numOfUndamagedBlackBoxes+""+state.numOfDamagedBlackBoxes+""+state.numOfDeadPassengers+""+state.numOfUnrescuedPassengers+""+state.coastGuardBoat.passengersOnBoat;
         hashMap.put(str,1);
 
     }
 
     public static boolean checkHashMap(State state){
 
-        String str =""+state.coastGuardBoat.x+""+state.coastGuardBoat.y+""+state.numOfDeath+""+state.numRetrived+""+state.numOfUndamagedBlackBoxes+""+state.numOfDamagedBlackBoxes+""+state.numOfDeadPassengers+""+state.numOfUnrescuedPassengers;
+        String str =""+state.coastGuardBoat.x+""+state.coastGuardBoat.y+""+state.numOfDeadPassengers+""+state.blackBoxesRetrived+""+state.numOfUndamagedBlackBoxes+""+state.numOfDamagedBlackBoxes+""+state.numOfDeadPassengers+""+state.numOfUnrescuedPassengers+""+state.coastGuardBoat.passengersOnBoat;
         return hashMap.get(str)==null;
 
     }
@@ -156,6 +156,7 @@ public  class SearchProcedure {
         String deaths="";
         String retrieved="";
         Queue<Node> queue = new LinkedList<>();
+        hashMap = new HashMap<>();
         Node intialStateNode =searchProblem.initialStateNode;
         queue.add(intialStateNode);
         int numOfnodesExpanded=0;

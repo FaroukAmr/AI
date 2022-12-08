@@ -3,8 +3,7 @@ package code;
 // A class represinting the state of a coast guard problem
 public class State implements Cloneable{
     StateObject[][] grid ;
-    int numOfDeath;
-    int numRetrived;
+
     CoastGuardBoat coastGuardBoat;
     int blackBoxesRetrived;
     int numOfUndamagedBlackBoxes;
@@ -12,10 +11,9 @@ public class State implements Cloneable{
     int numOfDeadPassengers;
     int numOfUnrescuedPassengers;
 
-    public State(StateObject[][] grid, int numOfDeath, int numRetrived, CoastGuardBoat coastGuardBoat, int blackBoxesRetrived, int numOfDeadPassengers) {
+    public State(StateObject[][] grid,CoastGuardBoat coastGuardBoat, int blackBoxesRetrived, int numOfDeadPassengers) {
         this.grid = grid;
-        this.numOfDeath = numOfDeath;
-        this.numRetrived = numRetrived;
+
         this.coastGuardBoat = coastGuardBoat;
         this.blackBoxesRetrived = blackBoxesRetrived;
         this.numOfDeadPassengers = numOfDeadPassengers;
@@ -28,18 +26,15 @@ public class State implements Cloneable{
     public State(StateObject[][] grid, CoastGuardBoat coastGuardBoat) {
         this.grid = grid;
         this.coastGuardBoat = coastGuardBoat;
-        numOfDeath=0;
-        numRetrived=0;
+        numOfDeadPassengers=0;
         blackBoxesRetrived=0;
         calculateNumOfUndamagedBlackBoxes();
         calculateNumOfUnrescuedPassengers();
 
     }
 
-    public State(StateObject[][] grid, int numOfDeath, int numRetrived,CoastGuardBoat coastGuardBoat, int blackBoxesRetrived) {
+    public State(StateObject[][] grid,CoastGuardBoat coastGuardBoat, int blackBoxesRetrived) {
         this.grid = grid;
-        this.numOfDeath = numOfDeath;
-        this.numRetrived = numRetrived;
         this.coastGuardBoat = coastGuardBoat;
         this.blackBoxesRetrived = blackBoxesRetrived;
         calculateNumOfUndamagedBlackBoxes();
@@ -61,7 +56,7 @@ public class State implements Cloneable{
                     retGrid[i][j] = grid[i][j].clone();
             }
         }
-        State retState = new State(retGrid,numOfDeath,numRetrived, (CoastGuardBoat) coastGuardBoat.clone(),blackBoxesRetrived,numOfDeadPassengers);
+        State retState = new State(retGrid ,(CoastGuardBoat) coastGuardBoat.clone(),blackBoxesRetrived,numOfDeadPassengers);
 
         return retState;
     }
