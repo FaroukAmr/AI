@@ -161,7 +161,7 @@ public class CoastGuard extends SearchProblem{
     @Override
     //checks for the goal state if there is no more blackboxes or passengers to be rescued(if they are on the boat they are not rescued yet).
     public boolean isGoalState(Node node) {
-        if(node.state.numOfUndamagedBlackBoxes==0 && node.state.getNumOfNotRescuedPassengers()==0 && node.state.coastGuardBoat.passengersOnBoat==0)
+        if(node.state.numOfUndamagedBlackBoxes==0 && node.state.getNumUnRescuedPassengers()==0 && node.state.coastGuardBoat.passengersOnBoat==0)
             return true;
         else
             return false;
@@ -363,7 +363,7 @@ public class CoastGuard extends SearchProblem{
                     }
                     else {
                         ship.numOfPassengers--;
-                        state.numOfNotRescuedPassengers--;
+                        state.numUnRescuedPassengers--;
                         state.numOfDeadPassengers++;
                         if(ship.numOfPassengers<=0) {
                             ship.wrecked = true;

@@ -9,7 +9,7 @@ public class State implements Cloneable{
     int numOfUndamagedBlackBoxes;
     int numOfDamagedBlackBoxes=0;
     int numOfDeadPassengers;
-    int numOfNotRescuedPassengers;
+    int numUnRescuedPassengers;
 
     public State(StateObject[][] grid,CoastGuardBoat coastGuardBoat, int blackBoxesRetrieved, int numOfDeadPassengers) {
         this.grid = grid;
@@ -72,18 +72,18 @@ public class State implements Cloneable{
                 }
             }
         }
-        this.numOfNotRescuedPassengers =numOfUnRescuedPassengers;
-        this.numOfNotRescuedPassengers +=coastGuardBoat.passengersOnBoat;
+        this.numUnRescuedPassengers =numOfUnRescuedPassengers;
+        this.numUnRescuedPassengers +=coastGuardBoat.passengersOnBoat;
     }
 
 
 
-    public int getNumOfNotRescuedPassengers() {
-        return numOfNotRescuedPassengers;
+    public int getNumUnRescuedPassengers() {
+        return numUnRescuedPassengers;
     }
 
     public void decreaseNumOfUnRescuedPassengers(int numberToDecrease) {
-        this.numOfNotRescuedPassengers -= numberToDecrease;
+        this.numUnRescuedPassengers -= numberToDecrease;
     }
 
     //calculates the number of unSunk ships

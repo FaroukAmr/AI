@@ -11,14 +11,14 @@ public  class SearchProcedure {
 
     public static void putInHashMap(State state){
 
-        String str =""+state.coastGuardBoat.x+""+state.coastGuardBoat.y+""+state.numOfDeadPassengers+""+state.blackBoxesRetrieved +""+state.numOfUndamagedBlackBoxes+""+state.numOfDamagedBlackBoxes+""+state.numOfDeadPassengers+""+state.numOfNotRescuedPassengers +""+state.coastGuardBoat.passengersOnBoat;
+        String str =""+state.coastGuardBoat.x+""+state.coastGuardBoat.y+""+state.numOfDeadPassengers+""+state.blackBoxesRetrieved +""+state.numOfUndamagedBlackBoxes+""+state.numOfDamagedBlackBoxes+""+state.numOfDeadPassengers+""+state.numUnRescuedPassengers +""+state.coastGuardBoat.passengersOnBoat;
         hashMap.put(str,1);
 
     }
 
     public static boolean checkHashMap(State state){
 
-        String str =""+state.coastGuardBoat.x+""+state.coastGuardBoat.y+""+state.numOfDeadPassengers+""+state.blackBoxesRetrieved +""+state.numOfUndamagedBlackBoxes+""+state.numOfDamagedBlackBoxes+""+state.numOfDeadPassengers+""+state.numOfNotRescuedPassengers +""+state.coastGuardBoat.passengersOnBoat;
+        String str =""+state.coastGuardBoat.x+""+state.coastGuardBoat.y+""+state.numOfDeadPassengers+""+state.blackBoxesRetrieved +""+state.numOfUndamagedBlackBoxes+""+state.numOfDamagedBlackBoxes+""+state.numOfDeadPassengers+""+state.numUnRescuedPassengers +""+state.coastGuardBoat.passengersOnBoat;
         return hashMap.get(str)==null;
 
     }
@@ -29,7 +29,7 @@ public  class SearchProcedure {
     }
     public  int heuristicFunctionOne(Node node){
 
-        return 100-node.state.getNumOfNotRescuedPassengers();
+        return 100-node.state.getNumUnRescuedPassengers();
     }
     public  int heuristicFunctionTwo(Node node){
 
