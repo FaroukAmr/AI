@@ -54,8 +54,8 @@ Each search problem contains the following information:
  3.Abstract Function(costFunction) that calculates the cost function that have to be overridden by
    the search problem implementing it.
  4.Abstract function(isGoalState) that checks if the node is a goal state node.
- 5.Abstract function(applyAction) that applies the action on a node and returns the node that resulted
-   from the action with the original node as a parent.
+ 5.Abstract function(applyAction) that applies the action on a node and returns the node that
+   resulted from the action with the original node as a parent.
  6.Function (getChildrenNodes) that applies all the actions available on a node and returns them in
    an arrayList.
 ```
@@ -83,9 +83,10 @@ The coast guard boat class extends ClassObject, and contains the following infor
    positions of an object in the grid
    
 3.getCoastGuardBoatFromStringGrid: a static method that takes the starting grid as an input,
-   and returns a CoastGuardBoat object
-We use the initial node that we create from the string grid(by the creating the boat and the state)
-    to create an instance of the coastguard and pass it to the searchProcedure search method with the strategy.
+   and returns a CoastGuardBoat object. 
+    We use the initial node that we create from the string grid(by the creating the boat and the state)
+    to create an instance of the coastguard and pass it to the searchProcedure search method
+    with the strategy.
 
 
 ```
@@ -166,6 +167,4 @@ Time : Time take in milliseconds
 Expanded Nodes : Number of nodes expanded by the algorithm till termination
 Algorithm : The type of algorithm used
 ```
-### Citations
-```md
-```
+
