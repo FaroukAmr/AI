@@ -82,8 +82,6 @@ The coast guard boat class extends ClassObject, and contains the following infor
 We use the intial node that we create from the string grid(by the creating the boat and the state ) to create an instance of the coastguard and pass it to the searchProcedure search method with the strategy.
 
 
-
-4.
 ```
 #### 2. SearchProcedure class
 ```md
