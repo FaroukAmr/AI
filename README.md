@@ -43,25 +43,16 @@ Each node contains the following information:
 ```md
 Each search problem contains the following information:
 
-1. Actions performed as an array of strings
+1. Possible actions  as an array of strings
 2. initial state node
-    2.1 State
-        2.1.1 The current grid as an array of arrays
-        2.1.2 Coast guard boat instance
-            2.1.2.1 Capacity of the coast guard
-            2.1.2.2 X position of the coast guard
-            2.1.2.3 Y position of the coast guard
-            2.1.2.4 Y position of the coast guard
-            2.1.2.5 Number of passengers on the coast guard
-            2.1.2.6 Number of remaining space on the coast guard
-        2.1.3 Number of black boxes retrieved
-        2.1.4 Number of undamaged black boxes
-        2.1.5 Number of damaged black boxes initially set to 0
-        2.1.6 Number of dead passengers
-        2.1.7 Number of rescued passengers
-    2.2. Array of children nodes
-    2.3. Parent node
-    2.4. Action performed to reach this node as a string, null on initial node
+
+    2.1. Array of children nodes
+    2.2. Parent node
+    2.3. Action performed to reach this node as a string, null on initial node
+ 3.Abstract Function(costFunction) that calculates the cost function that have to be overriden by the search problem implementing it.
+ 4.Abstract function(isGoalState) that checks if the node is a goal state node.
+ 5.Abstract function(applyAction) that applies the action on a node and returns the node that resulted from the action with the original node as a parent.
+ 6.Function (getChildrenNodes) that applies all the actions available on a node and returns them in an arrayList.
 ```
 
 ### Discussion of the coast guard problem
@@ -88,6 +79,11 @@ The coast guard boat class extends ClassObject, and contains the following infor
    
 3.getCoastGuardBoatFromStringGrid: a static method that takes the starting grid as an input,
    and returns a CoastGuardBoat object
+We use the intial node that we create from the string grid(by the creating the boat and the state ) to create an instance of the coastguard and pass it to the searchProcedure search method with the strategy.
+
+
+
+4.
 ```
 #### 2. SearchProcedure class
 ```md
