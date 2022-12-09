@@ -40,18 +40,28 @@ public  class SearchProcedure {
         int xCoastGuard=node.state.coastGuardBoat.x;
         int yCoastGuard=node.state.coastGuardBoat.y;
         StateObject[][] grid = node.state.grid;
-        int nearestShipDis=100000;
+        int nearestShipDis=1000000;
+        boolean foundShip=false;
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
                 if(grid[i][j] instanceof Ship){
+
                     Ship ship = (Ship) grid[i][j];
-                    int distance = manhattanDistance(xCoastGuard,yCoastGuard,ship.x,ship.y);
-                    if(distance<nearestShipDis)
-                        nearestShipDis=distance;
+                    if(!ship.wrecked){
+                        int distance = manhattanDistance(xCoastGuard,yCoastGuard,ship.x,ship.y);
+                        if(distance<nearestShipDis){
+                            nearestShipDis=distance;
+                            foundShip=true;
+                        }
+                    }
+
 
                 }
 
             }
+        }
+        if(!foundShip){
+            return 0;
         }
         return nearestShipDis;
     }
