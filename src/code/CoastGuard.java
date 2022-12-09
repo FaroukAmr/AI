@@ -146,19 +146,24 @@ public class CoastGuard extends SearchProblem{
     public static void main(String[] args)
     {
 
+        long startTime = System.nanoTime();
         solve("10,6;59;1,7;0,0,2,2,3,0,5,3;1,3,69,3,4,80,4,7,94,4,9,14,5,2,39;","UC",false);
-        solve("7,5;100;3,4;2,6,3,5;0,0,4,0,1,8,1,4,77,1,5,1,3,2,94,4,3,46;","UC",false);
-        solve("6,6;74;1,1;0,3,1,0,2,0,2,4,4,0,4,2,5,0;0,0,78,3,3,5,4,3,40;","UC",false);
+        long endTime = System.nanoTime();
 
-        //30%   5GB     18726MS     BFS
-        //13%   1.8GB   46MS        DFS
-        //15%   3GB     72492MS     ID
-        //16%   2.9GB   17123MS      DFMD
-        //10%   1.8GB   53MS        GR1
-        //20%   2.3GB   1185MS      GR2
-        //14%   1.8GB   404MS      AS1
-        //14%   1.9GB   575MS      AS2
-        //19%   2.1GB   391MS      UC
+        long duration = (endTime - startTime);  //divide by 1000000 to get milliseconds.
+        System.out.println(duration/1000000);
+
+
+
+        //15%   1.7GB     3MS     BFS
+        //13%   1.8GB   3MS        DFS
+        //15%   3GB     69377MS     ID
+        //16%   2.9GB   16864MS      DFMD
+        //10%   1.8GB   45MS        GR1
+        //20%   2.3GB   66MS      GR2
+        //14%   1.8GB   385MS      AS1
+        //14%   1.9GB   573MS      AS2
+        //19%   2.1GB   371MS      UC
 
 
 

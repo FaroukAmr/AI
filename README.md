@@ -17,7 +17,7 @@ Actions such as pick-up, drop, retrieve, and movement in any of the 4 directions
 We are required to create an agent that acts as a coast guard boat captain using several search procedures.
 ```
 
-### Discussion of the search-tree node ADT implementation
+### Search-tree node ADT implementation
 ```md
 Each node contains the following information:
 1. State
@@ -39,7 +39,7 @@ Each node contains the following information:
 4. Action performed to reach this node as a string, null on initial node
 ```
 
-### Discussion of the search problem ADT implementation
+### Search problem ADT implementation
 ```md
 Each search problem contains the following information:
 
@@ -55,7 +55,7 @@ Each search problem contains the following information:
  6.Function (getChildrenNodes) that applies all the actions available on a node and returns them in an arrayList.
 ```
 
-### Discussion of the coast guard problem
+### Coast guard problem
 ```md
 The coast guard boat class extends ClassObject, and contains the following information:
 
@@ -67,7 +67,7 @@ The coast guard boat class extends ClassObject, and contains the following infor
 6. Number of remaining space on the coast guard
 ```
 
-### Discussion of the main functions
+### Main functions
 #### 1. CoastGuard class
 ```md
 1. solve : a static method that takes the starting grid, the strategy to use,
@@ -79,7 +79,7 @@ The coast guard boat class extends ClassObject, and contains the following infor
    
 3.getCoastGuardBoatFromStringGrid: a static method that takes the starting grid as an input,
    and returns a CoastGuardBoat object
-We use the intial node that we create from the string grid(by the creating the boat and the state ) to create an instance of the coastguard and pass it to the searchProcedure search method with the strategy.
+We use the initial node that we create from the string grid(by the creating the boat and the state ) to create an instance of the coastguard and pass it to the searchProcedure search method with the strategy.
 
 
 ```
@@ -94,7 +94,7 @@ We use the intial node that we create from the string grid(by the creating the b
 4. heuristicFunction:this function takes a node and returns the heuristic value of the node.
 ```
 
-### Discussion of the various search algorithms
+### Various search algorithms
 ```md
 1. heuristicSearch: a method that takes the search problem and a heuristic number, the method perform the search using a priority queue, and
     based on the heuristic number the method initializes the priority queue with the appropriate comparator that implements the heuristic,
@@ -113,19 +113,19 @@ We use the intial node that we create from the string grid(by the creating the b
 
 ```
 
-### Discussion of the heuristic functions
+### Heuristic functions
 ```md
 we have used two heuristic functions:
 
-1- the first function calculates the distance between the coast guard and the nearest ship that is not wrecked, this is
+1. the first function calculates the distance between the coast guard and the nearest ship that is not wrecked, this is
 admissible because the if the distance was X for example, then when the coast guard moves to the ship, 
 there will be from 1 to X dead passengers, so if the distance is X, then the heuristic value will be X ,
 The cost function will be numberOfDamagedBlackboxes+ Y *1000 , where Y is the number of dead passengers
 which is min(number of passengers on the ship, X) which will be a value from 1 to X, so the 
 heuristic function will always be less than or equal to the cost function, so the heuristic function is admissible.
 
-2- the second heuristic function is equal to the number of unrescued passengers, this is admissible because
-the number of unrescued passengers will never increase each time step, while the number of dead passengers
+2. the second heuristic function is equal to the number of un-rescued passengers, this is admissible because
+the number of un-rescued passengers will never increase each time step, while the number of dead passengers
 will always increase by one each time step, which makes the cost function increase by 1000 each step,
 so the heuristic function will always be less than or equal to the cost function, so the heuristic function is admissible.
 ```
@@ -134,28 +134,26 @@ so the heuristic function will always be less than or equal to the cost function
 #### Tests used in all comparisons :
 ```md
 1. "10,6;59;1,7;0,0,2,2,3,0,5,3;1,3,69,3,4,80,4,7,94,4,9,14,5,2,39;"
-2. "7,5;100;3,4;2,6,3,5;0,0,4,0,1,8,1,4,77,1,5,1,3,2,94,4,3,46;"
-3. "6,6;74;1,1;0,3,1,0,2,0,2,4,4,0,4,2,5,0;0,0,78,3,3,5,4,3,40;"
 ```
 
 | CPU | Memory | Time     | Expanded Nodes | Algorithm |
 |-----|--------|----------|----------------|-----------|
-| 30% | 5GB    | 18726 ms |     182925     | BFS       |
-| 13% | 1.8GB  | 46 ms    |      116       | DFS       |
-| 15% | 3GB    | 72492 ms |     1908754    | ID        |
-| 10% | 1.8GB  | 53 ms    |     191        | GR1       |
-| 20% | 2.3GB  | 1185 ms  |      447       | GR2       |
-| 14% | 1.8GB  | 404 ms   |     23973      | AS1       |
-| 14% | 1.9GB  | 575 ms   |     26100      | AS2       |
-| 19% | 2.1GB  | 391 ms   |     24634     | UC        |
+| 30% | 5GB    | 3 ms     | 182925         | BFS       |
+| 13% | 1.8GB  | 69377 ms | 116            | DFS       |
+| 15% | 3GB    | 16864 ms | 1908754        | ID        |
+| 10% | 1.8GB  | 45 ms    | 191            | GR1       |
+| 20% | 2.3GB  | 66 ms    | 447            | GR2       |
+| 14% | 1.8GB  | 385 ms   | 23973          | AS1       |
+| 14% | 1.9GB  | 573 ms   | 26100          | AS2       |
+| 19% | 2.1GB  | 371 ms   | 24634          | UC        |
 
 ```md
-CPU: CPU utilization's percentage
-Memory: RAM usage in gigabytes
-Time: Time taken to complete all tasks in milliseconds
-Algorithm: The type of algorithm used
+CPU : CPU utilization's percentage
+Memory : RAM usage in gigabytes
+Time : Time take in milliseconds
+Expanded Nodes : Number of nodes expanded by the algorithm till termination
+Algorithm : The type of algorithm used
 ```
 ### Citations
 ```md
-
 ```
