@@ -140,14 +140,14 @@ so the heuristic function will always be less than or equal to the cost function
 
 | CPU | Memory | Time     | Expanded Nodes | Algorithm |
 |-----|--------|----------|----------------|-----------|
-| 30% | 5GB    | 18726 ms |                | BFS       |
-| 13% | 1.8GB  | 46 ms    |                | DFS       |
-| 15% | 3GB    | 72492 ms |                | ID        |
-| 10% | 1.8GB  | 53 ms    |                | GR1       |
-| 20% | 2.3GB  | 1185 ms  |                | GR2       |
-| 14% | 1.8GB  | 404 ms   |                | AS1       |
-| 14% | 1.9GB  | 575 ms   |                | AS2       |
-| 19% | 2.1GB  | 391 ms   |                | UC        |
+| 30% | 5GB    | 18726 ms |     182925     | BFS       |
+| 13% | 1.8GB  | 46 ms    |      116       | DFS       |
+| 15% | 3GB    | 72492 ms |     1908754    | ID        |
+| 10% | 1.8GB  | 53 ms    |     191        | GR1       |
+| 20% | 2.3GB  | 1185 ms  |      447       | GR2       |
+| 14% | 1.8GB  | 404 ms   |     23973      | AS1       |
+| 14% | 1.9GB  | 575 ms   |     26100      | AS2       |
+| 19% | 2.1GB  | 391 ms   |     24634     | UC        |
 
 ```md
 CPU: CPU utilization's percentage
